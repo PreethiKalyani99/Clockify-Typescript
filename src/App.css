@@ -1,38 +1,364 @@
-.App {
+.container{
+  max-width: 2000px !important;
+  padding-left: 10px !important;
+  /* padding-right: 0 !important; */
+}
+
+.row>*, .nav-link{
+  padding: 0 !important;
+}
+
+.sidebar{
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.col-lg-1{
+  width: 10% !important;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.col-width{
+  width: 89% !important;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.width-expand{
+  width: 94% !important;
+}
+
+.time-tracker-icon{
+  padding: 15px;
+  margin-left: 8%;
+}
+
+.header{
+  position: sticky;
+  top: 0;
+  background-color: white;
+}
+
+.header-container{
+  height: 50px;
+  padding: 10px !important;
+}
+
+.list-icon{
+  height: 50px !important;
+  width: 50px !important;
+}
+
+.shrink{
+  width: 5% !important;
+}
+.shrink-li a:hover, .expand-li a:hover{
+  background-color: rgb(61, 61, 243);
   color: white;
+  width: 100%;
 }
 
-.App-link {
-  color: #61dafb;
+.hide{
+  display: none;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.parent-container{
+  overflow: auto !important;
+}
+.add-task-container, .timer-task-container{
+  height: 65px !important;
+  border: 1px solid #858181;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  position: sticky;
+  top: 30px;
+  background-color: white;
+}
+
+.add-sub-container, .task-sub-container, .timer-sub-container{
+  display: flex;
+}
+
+.timer-sub-container{
+  align-items: center;
+}
+.task-sub-container{
+  height: 70px;
+}
+
+.zIndex{
+  z-index: 99999 !important;
+}
+
+.input-box, .timer-input-box{
+  height: 40px;
+  border: none;
+  outline: none;
+  padding: 10px;
+}
+
+.input-box{
+  width: 80%;
+}
+
+.timer-input-box{
+  width: 70%;
+}
+
+.input-box:hover, .timer-input-box:hover{
+  border: 1px solid #858181;
+}
+
+.popup{
+  width: 350px;
+  height: 250px;
+  background-color: white;
+  border-radius: 25px;
+  padding: 20px;
+  text-align: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  z-index: 1000 !important;
+}
+
+.display-container{
+  display: flex;
+  position: relative;
+}
+
+.week-container{
+  border: 1px solid #858181;
+  border-bottom: 5px solid #b1adad;
+  z-index: 1 !important;
+}
+
+.border-style{
+  border-bottom: 1px solid #858181;
+}
+
+.task-container{
+  display: flex;
+  gap: 50px;
+  padding: 5px;
+  align-items: center;
+}
+
+.three-dots{
+  position: absolute;
+  right: 10px;
+  outline: none;
+  border: none;
+  background-color: white;
+}
+
+.action-items-container{
+  position: absolute;
+  right: 0px;
+  text-align: start;
+  z-index: 2 !important;
+}
+
+.hide{
+  display: none;
+}
+
+.action-items{
+  list-style-type: none;
+  background-color: white;
+  padding: 10px;
+  margin: 0;
+  position: absolute;
+  top: 30px;
+  right: 0;
+  z-index: 3 !important;
+}
+
+.shrink-width{
+  width: 1671px;
+}
+
+.expand-width{
+  width: 1767px;
+}
+
+.date-picker{
+  z-index: 9999 !important;
+}
+
+.react-selectcomponent{
+  width: 300px;
+}
+
+.project-dropdown{
+  position: fixed;
+  z-index: 999 !important;
+  margin-left: 40%;
+}
+
+.project-text-color{
+  color: #03a9f4;
+}
+
+.project-text, .task-project-text{
+  border: none;
+  outline: none;
+  background-color: white;
+  margin-left: 1rem;
+}
+
+.description-project-container{
+  width: 60%;
+  display: flex;
+  align-items: center;
+}
+
+.project-text{
+  flex-grow: 1;
+}
+
+.display-container-style{
+  width: 100%;
+}
+
+.startTimeBox{
+  margin-left: 3rem;
+}
+.startTimeBox, .endTimeBox{
+  width: 55px;
+  padding: 7px;
+}
+
+.startTimeBox:hover, .endTimeBox:hover, .durationBox:hover, .description-display:hover{
+  border: 1px solid #C6D2D9;
+}
+
+.startTimeBox, .endTimeBox, .durationBox, .dateIcon{
+  height: 45px;
+  border: none;
+  outline: none;
+}
+
+.durationBox, .timer-duration{
+  width: 90px;
+  height: 45px;
+  text-align: center;
+  color: #333;
+}
+
+.durationBox{
+  margin-left: 2rem;
+}
+
+
+.timer-duration{
+  position: absolute;
+  right: 13rem;
+  border: none;
+  outline: none;
+}
+
+.days, .task-days{
+  font-size: 12px;
+  color: grey;
+}
+
+.days{
+  top: .8rem;
+}
+
+.dateIcon{
+  background-color: white;
+  margin-left: 3rem;
+}
+
+.date-text{
+  margin-left: 1rem;
+  width: 120px;
+  border-right: 1px dotted rgb(206, 202, 202);
+}
+
+.addButton, .stop-btn{
+  width: 90px;
+  height: 40px;
+  color: white;
+  position: absolute;
+}
+
+.stop-btn{
+  background-color: #f22112;
+  border-color: #ea1c0d;
+  right: 80px;
+}
+
+.addButton{
+  border-color: #03a9f4;
+  background-color: #03a9f4;
+  right: 35px;
+}
+
+.week-total-container, .total-time-container{
+  display: flex;
+  justify-content: space-between;
+}
+
+.week-total, .durationBox, .total-time, .timer-duration{
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.week-total-text, .total-time-text{
+  font-size: 13px;
+}
+
+.total-time-container{
+  border-bottom: 1px solid #858181;
+  padding: 10px 15px 0;
+  background-color: #e4eaee;
+}
+
+.description-display{
+  border: none;
+  outline: none;
+  height: 45px;
+  padding-left: 10px;
+}
+
+.task-time-container{
+ position: absolute;
+ right: 150px;
+ display: flex;
+ align-items: center;
+}
+
+.play-button{
+  background-color: white;
+  margin-left: 2rem;
+  font-size: 35px;
+  color: #858181;
+  border: none;
+  outline: none;
+}
+
+.duplicate-btn, .delete-btn, .discard-btn {
+  border: none;
+  outline: none;
+  background-color: white;
+}
+
+.pagination{
+  display: flex;
+  justify-content: center;
+}
+
+.required{
+  color: #ea1c0d;
+}
+
+.modal-body{
+  display: flex;
+}
+
+.create-project{
+  padding-left: 10px;
+  outline: none;
 }
