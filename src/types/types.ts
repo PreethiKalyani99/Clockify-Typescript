@@ -67,3 +67,51 @@ export type CheckString = {
     isValid : boolean
     colon: number
 }
+
+export type TimeEntryDataProp = {
+    description: string
+    start: string
+    end: string
+    projectId: string | null
+}
+
+export type TimeInterval = {
+    duration: string
+    end: string
+    start: string
+}
+
+export type CustomFieldValues = {
+    customFieldId: string
+    name: string
+    timeEntryId: string
+    type: string
+    value: string
+}
+
+export type TimeEntries = {
+    customFieldValues: CustomFieldValues[]
+    description: string
+    id: string
+    isLocked: boolean
+    kioskId: string | null
+    projectId: string | null
+    taskId: string | null
+    timeInterval: TimeInterval
+    type: string
+    userId: string
+    workspaceId: string
+}
+
+export type Project = {
+    clientId: string
+    clientName: string
+    color: string
+    duration: string
+    id: string
+    name: string
+}
+
+export type Data = TimeEntries & {
+    project: Project
+}

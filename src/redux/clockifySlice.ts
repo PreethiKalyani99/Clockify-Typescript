@@ -1,7 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { InitialState } from "../types/types";
+import { 
+    createTimeEntry,
+} from "./clockifyThunk";
+import { InitialState, Data } from "../types/types";
 
 const initialState : InitialState = {
+    isLoading: false,
+    data: [],
     isModalOpen: false,
     selectedProject: {value: '', label: 'Project'},
     selectedClient: {value: '', label: ''},
@@ -33,7 +38,24 @@ export const ClockifySlice = createSlice({
         },
         updateTaskName: (state, action: PayloadAction<string>) => {
             state.currentTask.taskName = action.payload
+        },
+        resetState: (state) => {
+            state.currentTask.taskName = ''
+            state.currentTask.startTime = new Date().toString()
+            state.currentTask.endTime = new Date().toString()
+            state.currentTask.duration = '00:00:00'
+            state.selectedProject = {value: '', label: 'Project'}
+            state.selectedClient = {value: '', label: ''}
         }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(createTimeEntry.pending, (state) => {
+            state.isLoading = true
+        })
+        .addCase(createTimeEntry.fulfilled, (state, action: PayloadAction<Data>) => {
+            state.isLoading = false
+            state.data = [...state.data, action.payload] 
+        })
     }
 })
 
@@ -42,5 +64,6 @@ export const {
     updateStartTime,
     updateEndTime,
     updateDuration,
-    updateTaskName
+    updateTaskName,
+    resetState,
 } = ClockifySlice.actions

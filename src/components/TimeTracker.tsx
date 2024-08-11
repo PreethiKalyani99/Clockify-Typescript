@@ -5,7 +5,8 @@ import {
     updateStartTime, 
     updateEndTime, 
     updateTaskName, 
-    updateDuration 
+    updateDuration,
+    resetState
 } from "../redux/clockifySlice";
 import { 
     calculateEndDate, 
@@ -20,9 +21,10 @@ import {
     convertDurationToHrsMinsSecs, 
     calculateEndTime,
 } from "../utils/hoursAndMinutes";
-import { RootState } from "../redux/store";
+import { RootState, AppDispatch } from "../redux/store";
 import { FocusEvent, KeyboardEvent } from "../types/types";
 import { checkString } from "../utils/checkString";
+import { createTimeEntry } from "../redux/clockifyThunk";
 
 export function TimeTracker(){
     const { isModalOpen, currentTask, selectedProject, selectedClient} = useSelector((state: RootState) => state.clockify)
@@ -36,7 +38,7 @@ export function TimeTracker(){
     const [endDateTime, setEndDateTime] = useState(getFormattedTime(timeEnd))
     const [totalDuration, setDuration] = useState(duration)
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<AppDispatch>()
 
     const handleStartTimeBlur = (e: FocusEvent): void => {
         const {isValid, hours, minutes} = convertToHoursAndMinutes(e.target.value)
@@ -112,7 +114,18 @@ export function TimeTracker(){
     }
 
     const addTask = () => {
-        console.log("clicked!")
+        if(taskName !== ''){
+            dispatch(createTimeEntry({
+                description: taskName,
+                start: new Date(timeStart).toISOString().split('.')[0] + 'Z',
+                end:  new Date(timeEnd).toISOString().split('.')[0] + 'Z',
+                projectId: selectedProject.value ? selectedProject.value : null
+            }))
+            dispatch(resetState())
+        }
+        else{
+            alert('Please enter task description')
+        }
     }
 
     const handleEnter = (e: KeyboardEvent): void => {
