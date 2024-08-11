@@ -57,6 +57,9 @@ export function TimeTracker(){
         }
         
         const { hrs, mins } = calculateTimeDifference(new Date(newStart), timeEnd)
+        
+        dispatch(updateEndTime(timeEnd.toString()))
+
         if(hrs <= 999){
             setDuration(formatTime(hrs, mins, 0))
         }
@@ -72,12 +75,14 @@ export function TimeTracker(){
             return
         }
 
-        dispatch(updateEndTime(newEnd.toString()))
-        setEndDateTime(getFormattedTime(newEnd))
         if(timeStart.getHours() > hours || timeStart.getMinutes() > minutes){
             newEnd.setDate(newEnd.getDate() + 1)
         }
         const { hrs, mins } = calculateTimeDifference(new Date(newEnd), timeStart)
+
+        setEndDateTime(getFormattedTime(newEnd))
+        dispatch(updateEndTime(newEnd.toString()))
+
         if(hrs <= 999){
             setDuration(formatTime(hrs, mins, 0))
         }
