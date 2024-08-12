@@ -12,7 +12,7 @@ export type CustomFieldValues = {
     value: string
 }
 
-export type TimeEntries = {
+export type TimeEntriesValues = {
     customFieldValues: CustomFieldValues[]
     description: string
     id: string
@@ -24,6 +24,7 @@ export type TimeEntries = {
     type: string
     userId: string
     workspaceId: string
+    project: Project
 }
 
 export type Page = {
@@ -79,7 +80,7 @@ export type User = {
     workspaceId: string
 }
 
-export type Data = TimeEntries & {
+export type Data = TimeEntriesValues & {
     project: Project
 }
 
@@ -168,4 +169,18 @@ export type EntriesByWeek = {
     [weekRange: string]: {
         [date: string]: Data[]
     }
+}
+
+
+export type WeekEntriesProp = {
+    range: string
+    timeEntries: { [date: string]: TimeEntriesValues[] }
+}
+
+export type DayEntriesProp = TimeEntryListProp & {
+    date: string 
+}
+
+export type TimeEntryListProp = {
+    entries: TimeEntriesValues[]
 }
