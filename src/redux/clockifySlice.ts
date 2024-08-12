@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { 
     createTimeEntry,
+    getUserTimeEntries
 } from "./clockifyThunk";
 import { InitialState, Data } from "../types/types";
 
@@ -55,6 +56,13 @@ export const ClockifySlice = createSlice({
         .addCase(createTimeEntry.fulfilled, (state, action: PayloadAction<Data>) => {
             state.isLoading = false
             state.data = [...state.data, action.payload] 
+        })
+        .addCase(getUserTimeEntries.pending, (state) => {
+            state.isLoading = true
+        })
+        .addCase(getUserTimeEntries.fulfilled, (state, action: PayloadAction<Data[] | undefined>) => {
+            state.isLoading = false
+            state.data = action.payload ?? []
         })
     }
 })

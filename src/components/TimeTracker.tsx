@@ -36,7 +36,7 @@ export function TimeTracker(){
 
     useEffect(() => {
         dispatch(getUserTimeEntries())
-    }, [])
+    }, [dispatch])
     
     const handleStartTimeBlur = (e: FocusEvent): void => {
         const { isValid, start: newStart, end, duration: newDuration } = onStartTimeBlur(e.target.value, timeEnd)

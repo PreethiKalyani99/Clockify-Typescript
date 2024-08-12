@@ -111,8 +111,6 @@ export type InitialState = {
     isLoading: boolean,
     data: Data[],
     isModalOpen: boolean,
-    projects: ProjectData[],
-    clients: ClientData[],
     selectedProject: SelectedOption,
     selectedClient: SelectedOption,
     currentTask: CurrentTask
