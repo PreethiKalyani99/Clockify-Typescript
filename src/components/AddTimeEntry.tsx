@@ -3,6 +3,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { getFormattedDate } from "../utils/dateFunctions";
 import circledPlusIcon from '../assets/icons/circledPlusIcon.png'
 import { AddTimeEntryProp } from "../types/types";
+import { getSelectedProjectAndClient } from "../utils/getSelectedProjectAndClient";
 
 export function AddTimeEntry(props: AddTimeEntryProp) {
     return (
@@ -19,8 +20,14 @@ export function AddTimeEntry(props: AddTimeEntryProp) {
                         onKeyDown={props.onEnter}
                     ></input>
                     <button onClick={props.onToggle} className={!props.selectedProject.value ? "project-text-color project-text" : 'project-text'}>
-                        {!props.selectedProject.value && <img src={circledPlusIcon} alt="Circled Plus Icon" style={{ width: '20px', height: '20px', marginRight: '5px'}}/>}
-                        {`${props?.selectedProject?.label}${(props?.selectedClient?.label && props.selectedProject?.value) && ' - '}${props.selectedProject?.value ? props?.selectedClient?.label : ''}`}
+                        {!props.selectedProject.value && 
+                            <img 
+                                src={circledPlusIcon} 
+                                alt="Circled Plus Icon" 
+                                style={{ width: '20px', height: '20px', marginRight: '5px'}}
+                            />
+                        }
+                        {getSelectedProjectAndClient(props.selectedProject, props.selectedClient)}
                     </button>
                 </div>
                 <div className="add-sub-container">
