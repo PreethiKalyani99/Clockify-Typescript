@@ -3,7 +3,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { getFormattedDate } from "../utils/dateFunctions";
 import circledPlusIcon from '../assets/icons/circledPlusIcon.png'
 import { AddTimeEntryProp } from "../types/types";
-import { getSelectedProjectAndClient } from "../utils/getSelectedProjectAndClient";
+import { getSelectedProjectAndClient } from "../utils/getSelectedProjectClient";
 
 export function AddTimeEntry(props: AddTimeEntryProp) {
     return (
@@ -36,7 +36,7 @@ export function AddTimeEntry(props: AddTimeEntryProp) {
                         data-testid="start-time"
                         type="text"
                         name="startTime"
-                        onBlur={(e) => props.onStartBlur('add', e)}
+                        onBlur={(e) => props.onStartBlur(e)}
                         onChange={props.onStartChange}
                         value={props.start}
                     ></input>
@@ -46,7 +46,7 @@ export function AddTimeEntry(props: AddTimeEntryProp) {
                         data-testid="end-time"
                         type="text"
                         name="endTime"
-                        onBlur={(e) => props.onEndBlur('add', e)}
+                        onBlur={(e) => props.onEndBlur(e)}
                         onChange={props.onEndChange}
                         value={props.end}
                     ></input>
@@ -55,7 +55,7 @@ export function AddTimeEntry(props: AddTimeEntryProp) {
                         className="dateIcon"
                         id="date-picker"
                         selected={props.timeStart}
-                        onChange={(e) => props.onDateChange('add', e)}
+                        onChange={(e) => props.onDateChange(e)}
                         showTimeSelect={false}
                         dateFormat="yyyy-MM-dd"
                         customInput={
@@ -71,7 +71,7 @@ export function AddTimeEntry(props: AddTimeEntryProp) {
                         data-testid="task-duration"
                         type='text'
                         className='durationBox'
-                        onBlur={(e) => props.onDurationBlur('add', e)}
+                        onBlur={(e) => props.onDurationBlur(e)}
                         onChange={props.onDurationChange}
                         value={props.totalDuration}
                     />

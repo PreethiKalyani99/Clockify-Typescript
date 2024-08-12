@@ -1,5 +1,5 @@
 import { getFormattedDate, splitToDateComponents } from "./dateFunctions";
-import { Data, EntriesByWeek } from "../types/types";
+import { Data, EntriesByWeek, Constants } from "../types/types";
 
 
 export function groupEntriesByWeek(timeEntries:Data[]){
@@ -8,24 +8,29 @@ export function groupEntriesByWeek(timeEntries:Data[]){
         const dateStr = getFormattedDate(new Date(timeEntry.timeInterval.start))
         let timeEntryDate = new Date(timeEntry.timeInterval.start)
 
-        const { date: timeEntryStartDate, year: timeEntryYear, month: timeEntryMonth} = splitToDateComponents(timeEntryDate)
+        const { date: currentEntryStartDate, year: currentEntryYear, month: currentEntryMonth} = splitToDateComponents(timeEntryDate)
 
-        let first = timeEntryDate.getDate() - timeEntryDate.getDay()
-        let last = first + 6
+        let firstDayOfWeek = timeEntryDate.getDate() - timeEntryDate.getDay()
+        let lastDayOfWeek = firstDayOfWeek + Constants.DAYS_TO_END_OF_WEEK
 
-        const { date: weekStartDate, year: weekStartYear, month: weekStartMonth} = splitToDateComponents(new Date(timeEntryDate.setDate(first)))
+        const { date: weekStartDate, year: weekStartYear, month: weekStartMonth} = splitToDateComponents(new Date(timeEntryDate.setDate(firstDayOfWeek)))
 
-        let { date: weekEndDate, year: weekEndYear, month: weekEndMonth} = splitToDateComponents(new Date(timeEntryDate.setDate(last)))
+        let { date: weekEndDate, year: weekEndYear, month: weekEndMonth} = splitToDateComponents(new Date(timeEntryDate.setDate(lastDayOfWeek)))
 
-        if((weekEndMonth === 12 && timeEntryMonth < weekEndMonth) || (timeEntryStartDate < weekStartDate && timeEntryMonth > weekEndMonth)){
-            if(timeEntryYear > weekEndYear){
-                weekEndMonth = timeEntryMonth
+        if((weekEndMonth === Constants.LAST_MONTH_OF_YEAR && currentEntryMonth < weekEndMonth) ||  // Eg: Dec(week end month) === Dec && Jan(currentMonth) < Dec(week end month)
+            (currentEntryStartDate < weekStartDate && currentEntryMonth > weekEndMonth))           // Eg: 3(current date) < 31(week start date) && Aug(current month) > July(week end month)
+        {
+            if(currentEntryYear > weekEndYear){      // Eg: 2025(current year) > 2024 (week end year)
+                weekEndMonth = currentEntryMonth
                 weekEndYear += 1
+            }
+            else{
+                weekEndMonth = currentEntryMonth
             }
         }
         else{
-            weekEndYear = new Date(timeEntryDate.setDate(last)).getFullYear()
-            weekEndMonth = new Date(timeEntryDate.setDate(last)).getMonth() + 1
+            weekEndYear = new Date(timeEntryDate.setDate(lastDayOfWeek)).getFullYear()
+            weekEndMonth = new Date(timeEntryDate.setDate(lastDayOfWeek)).getMonth() + 1
         }
 
         let weekRange = `${weekStartYear}-${weekStartMonth}-${weekStartDate} to ${weekEndYear}-${weekEndMonth}-${weekEndDate}`

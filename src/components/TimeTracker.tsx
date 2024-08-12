@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AddTimeEntry } from "./AddTimeEntry";
 import { 
@@ -12,21 +12,13 @@ import {
     calculateEndDate, 
     getFormattedTime, 
     calculateDays, 
-    formatTime 
 } from "../utils/dateFunctions";
-import { 
-    calculateTimeDifference, 
-    convertToHoursAndMinutes, 
-    isDurationLimitExceeded, 
-    convertDurationToHrsMinsSecs, 
-    calculateEndTime,
-} from "../utils/hoursAndMinutes";
 import { groupEntriesByWeek } from "../utils/groupEntriesByWeek";
 import { RootState, AppDispatch } from "../redux/store";
-import { FocusEvent, KeyboardEvent, Type } from "../types/types";
-import { checkString } from "../utils/checkString";
-import { createTimeEntry } from "../redux/clockifyThunk";
+import { FocusEvent, KeyboardEvent, Constants } from "../types/types";
+import { createTimeEntry, getUserTimeEntries } from "../redux/clockifyThunk";
 import { TimeEntries } from "./TimeEntries";
+import { onStartTimeBlur, onEndTimeBlur, onDurationBlur } from "../utils/onBlurFunctions";
 
 export function TimeTracker(){
     const { isModalOpen, currentTask, selectedProject, selectedClient, data} = useSelector((state: RootState) => state.clockify)
@@ -42,82 +34,54 @@ export function TimeTracker(){
 
     const dispatch = useDispatch<AppDispatch>()
 
-    const handleStartTimeBlur = (type: Type, e: FocusEvent): void => {
-        const {isValid, hours, minutes} = convertToHoursAndMinutes(e.target.value)
-        const newStart = new Date(timeStart)
-        newStart.setHours(hours, minutes)
-        if (!isValid || isDurationLimitExceeded(newStart, timeEnd)) {
-            type === 'add' && setStartDateTime(getFormattedTime(timeStart))
+    useEffect(() => {
+        dispatch(getUserTimeEntries())
+    }, [])
+    
+    const handleStartTimeBlur = (e: FocusEvent): void => {
+        const { isValid, start: newStart, end, duration: newDuration } = onStartTimeBlur(e.target.value, timeEnd)
+        if(!isValid){
+            setStartDateTime(getFormattedTime(timeStart))
             return
         }
-        if(type === 'add'){
-            dispatch(updateStartTime(newStart.toString()))
-            setStartDateTime(getFormattedTime(newStart))
-        }
-        if(hours > timeEnd.getHours() || minutes > timeEnd.getMinutes()){
-            type === 'add' && timeEnd.setDate(timeEnd.getDate() + 1)
-        }
-        
-        const { hrs, mins } = calculateTimeDifference(new Date(newStart), timeEnd)
-        
-        type === 'add' && dispatch(updateEndTime(timeEnd.toString()))
-
-        if(hrs <= 999){
-            type === 'add' && setDuration(formatTime(hrs, mins, 0))
-        }
+        dispatch(updateStartTime(newStart.toString()))
+        setStartDateTime(getFormattedTime(newStart))
+        dispatch(updateEndTime(end.toString()))
+        setDuration(newDuration)
     }
 
-    const handleEndTimeBlur = (type: Type, e: FocusEvent): void => {
-        const {isValid, hours, minutes} = convertToHoursAndMinutes(e.target.value)
-        const newEnd = new Date(timeEnd)
-        newEnd.setHours(hours, minutes)
-        if(!isValid || isDurationLimitExceeded(timeStart, newEnd)) {
-            type === 'add' && setEndDateTime(getFormattedTime(timeEnd))
+    const handleEndTimeBlur = (e: FocusEvent): void => {
+        const { isValid, end: newEnd, duration: newDuration } = onEndTimeBlur(timeStart, e.target.value)
+        if(!isValid){
+            setEndDateTime(getFormattedTime(timeEnd))
             return
         }
-
-        if(timeStart.getHours() > hours || timeStart.getMinutes() > minutes){
-            newEnd.setDate(newEnd.getDate() + 1)
-        }
-        const { hrs, mins } = calculateTimeDifference(new Date(newEnd), timeStart)
-
-        if(type === 'add'){
-            setEndDateTime(getFormattedTime(newEnd))
-            dispatch(updateEndTime(newEnd.toString()))
-        }
-
-        if(hrs <= 999){
-            type === 'add' && setDuration(formatTime(hrs, mins, 0))
-        }
+        setEndDateTime(getFormattedTime(newEnd))
+        dispatch(updateEndTime(newEnd.toString()))
+        setDuration(newDuration)
     }
 
     const days = calculateDays(timeStart, timeEnd)
 
-    const handleDateChange = (type: Type, dateTime: Date | null): void => {
+    const handleDateChange = (dateTime: Date | null): void => {
         if(dateTime){
-            type === 'add' && dispatch(updateStartTime(dateTime.toString()))
+            dispatch(updateStartTime(dateTime.toString()))
             const newEndTime = calculateEndDate(dateTime, timeEnd, timeStart)
-            type === 'add' && dispatch(updateEndTime(newEndTime.toString()))
+            dispatch(updateEndTime(newEndTime.toString()))
         }
     }
 
-    const handleTotalDurationBlur = (type: Type, e: FocusEvent): void => {
-        const { isValid, colon } = checkString(e.target.value)
-        if( isValid && (colon < 3)){
-            const timeDuration = convertDurationToHrsMinsSecs(e.target.value)
-            const newEndTime = calculateEndTime(timeStart, timeDuration)
-            
-            if(type === 'add'){
-                dispatch(updateEndTime(newEndTime.toString()))
-                setEndDateTime(getFormattedTime(newEndTime))
-                dispatch(updateDuration(timeDuration))
-                setDuration(timeDuration)
-            }
-            
+    const handleTotalDurationBlur = (e: FocusEvent): void => {
+        const { isValid, end: newEndTime, duration: newDuration } = onDurationBlur(e.target.value, timeStart, Constants.NO_OF_COLON_DURATION)
+
+        if(!isValid){
+            setDuration(duration)
+            return
         }
-        else{
-            type === 'add' && setDuration(duration)
-        }
+        dispatch(updateEndTime(newEndTime.toString()))
+        setEndDateTime(getFormattedTime(newEndTime))
+        dispatch(updateDuration(newDuration))
+        setDuration(newDuration)
     }
 
     const toggleProject = () => {

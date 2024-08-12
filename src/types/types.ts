@@ -1,3 +1,19 @@
+export enum Constants{
+    MAX_TIME_LIMIT = 999,
+    NO_OF_COLON_HRS_MIN = 1,
+    NO_OF_COLON_DURATION = 2,
+    HRS_MINS_STR_LENGTH= 4,
+    DURATION_STR_LENGTH = 5,
+    HRS_PER_DAY = 24,
+    MS_PER_HR = 3600000,
+    MS_PER_MIN = 60000,
+    TIME_DIVISOR = 60,
+    MAX_DURATION = '999:00:00',
+    MS_PER_SEC = 1000,
+    DAYS_TO_END_OF_WEEK = 6,
+    LAST_MONTH_OF_YEAR = 12
+}
+
 export type TimeInterval = {
     duration: string
     end: string
@@ -124,8 +140,6 @@ export type FocusEvent = React.FocusEvent<HTMLInputElement>
 
 export type KeyboardEvent = React.KeyboardEvent<HTMLInputElement>
 
-export type Type = "add" | "display"
-
 export type AddTimeEntryProp = {
     onToggle: () => void
     selectedProject : SelectedOption
@@ -142,10 +156,10 @@ export type AddTimeEntryProp = {
     onStartChange: (e: ChangeEvent) => void
     onEndChange: (e: ChangeEvent) => void
     onDurationChange: (e: ChangeEvent) => void
-    onStartBlur: (type: Type, e: FocusEvent) => void
-    onEndBlur: (type: Type, e: FocusEvent) => void
-    onDurationBlur: (type: Type, e: FocusEvent) => void
-    onDateChange: (type: Type, dateTime: Date | null) => void
+    onStartBlur: (e: FocusEvent) => void
+    onEndBlur: (e: FocusEvent) => void
+    onDurationBlur: (e: FocusEvent) => void
+    onDateChange: (dateTime: Date | null) => void
     onAddTask: () => void
     onEnter: (e: KeyboardEvent) => void
 }
@@ -158,7 +172,7 @@ export type HoursAndMinutesProp = {
 
 export type CheckString = {
     isValid : boolean
-    colon: number
+    numberOfColons: number
 }
 
 export type TimeEntriesProp = {
