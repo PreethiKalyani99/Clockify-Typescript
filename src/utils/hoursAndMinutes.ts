@@ -1,6 +1,7 @@
 import { checkString } from "./checkString"
-import { HoursAndMinutesProp } from "../types/types"
+import { HoursAndMinutesProp, Data } from "../types/types"
 import { formatTime } from "./dateFunctions"
+import { parseISODuration } from "./checkString"
 
 export function convertToHoursAndMinutes(time: string): HoursAndMinutesProp {
     if(time.length <= 5 && time.length > 0){
@@ -72,4 +73,18 @@ export function calculateEndTime(startTime: Date, duration: string): Date{
     const [ hours, minutes, seconds ] = duration.split(':').map(Number)
     startDate.setHours(hours + startDate.getHours(), minutes + startDate.getMinutes(), seconds + startDate.getSeconds())
     return startDate
+}
+
+export function addTotalTime(tasks: Data[]){
+    const totalTimeInMS = tasks.reduce((acc, cur) => {
+       const [hours, minutes, seconds] = (parseISODuration(cur.timeInterval.duration)).split(':').map(Number)
+       acc += (hours * 60 * 60 + minutes * 60 + seconds) * 1000
+       return acc
+    }, 0)
+
+    const sec = Math.floor((totalTimeInMS / 1000) % 60)
+    const min = Math.floor((totalTimeInMS / (1000 * 60)) % 60)
+    const hrs = Math.floor((totalTimeInMS / (1000 * 60 * 60)))
+
+    return `${hrs.toString().padStart(2,'0')}:${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`
 }

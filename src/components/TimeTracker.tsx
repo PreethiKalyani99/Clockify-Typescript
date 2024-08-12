@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { AddTask } from "./AddTask";
+import { AddTimeEntry } from "./AddTimeEntry";
 import { 
     updateStartTime, 
     updateEndTime, 
@@ -21,13 +21,15 @@ import {
     convertDurationToHrsMinsSecs, 
     calculateEndTime,
 } from "../utils/hoursAndMinutes";
+import { groupEntriesByWeek } from "../utils/groupEntriesByWeek";
 import { RootState, AppDispatch } from "../redux/store";
-import { FocusEvent, KeyboardEvent } from "../types/types";
+import { FocusEvent, KeyboardEvent, Type } from "../types/types";
 import { checkString } from "../utils/checkString";
 import { createTimeEntry } from "../redux/clockifyThunk";
+import { TimeEntries } from "./TimeEntries";
 
 export function TimeTracker(){
-    const { isModalOpen, currentTask, selectedProject, selectedClient} = useSelector((state: RootState) => state.clockify)
+    const { isModalOpen, currentTask, selectedProject, selectedClient, data} = useSelector((state: RootState) => state.clockify)
     const {startTime, endTime, duration, taskName} = currentTask
 
     const timeStart = new Date(startTime)
@@ -40,38 +42,37 @@ export function TimeTracker(){
 
     const dispatch = useDispatch<AppDispatch>()
 
-    const handleStartTimeBlur = (e: FocusEvent): void => {
+    const handleStartTimeBlur = (type: Type, e: FocusEvent): void => {
         const {isValid, hours, minutes} = convertToHoursAndMinutes(e.target.value)
         const newStart = new Date(timeStart)
         newStart.setHours(hours, minutes)
-
         if (!isValid || isDurationLimitExceeded(newStart, timeEnd)) {
-            setStartDateTime(getFormattedTime(timeStart))
+            type === 'add' && setStartDateTime(getFormattedTime(timeStart))
             return
         }
-
-        dispatch(updateStartTime(newStart.toString()))
-        setStartDateTime(getFormattedTime(newStart))
+        if(type === 'add'){
+            dispatch(updateStartTime(newStart.toString()))
+            setStartDateTime(getFormattedTime(newStart))
+        }
         if(hours > timeEnd.getHours() || minutes > timeEnd.getMinutes()){
-            timeEnd.setDate(timeEnd.getDate() + 1)
+            type === 'add' && timeEnd.setDate(timeEnd.getDate() + 1)
         }
         
         const { hrs, mins } = calculateTimeDifference(new Date(newStart), timeEnd)
         
-        dispatch(updateEndTime(timeEnd.toString()))
+        type === 'add' && dispatch(updateEndTime(timeEnd.toString()))
 
         if(hrs <= 999){
-            setDuration(formatTime(hrs, mins, 0))
+            type === 'add' && setDuration(formatTime(hrs, mins, 0))
         }
     }
 
-    const handleEndTimeBlur = (e: FocusEvent): void => {
+    const handleEndTimeBlur = (type: Type, e: FocusEvent): void => {
         const {isValid, hours, minutes} = convertToHoursAndMinutes(e.target.value)
         const newEnd = new Date(timeEnd)
         newEnd.setHours(hours, minutes)
-
         if(!isValid || isDurationLimitExceeded(timeStart, newEnd)) {
-            setEndDateTime(getFormattedTime(timeEnd))
+            type === 'add' && setEndDateTime(getFormattedTime(timeEnd))
             return
         }
 
@@ -80,37 +81,42 @@ export function TimeTracker(){
         }
         const { hrs, mins } = calculateTimeDifference(new Date(newEnd), timeStart)
 
-        setEndDateTime(getFormattedTime(newEnd))
-        dispatch(updateEndTime(newEnd.toString()))
+        if(type === 'add'){
+            setEndDateTime(getFormattedTime(newEnd))
+            dispatch(updateEndTime(newEnd.toString()))
+        }
 
         if(hrs <= 999){
-            setDuration(formatTime(hrs, mins, 0))
+            type === 'add' && setDuration(formatTime(hrs, mins, 0))
         }
     }
 
     const days = calculateDays(timeStart, timeEnd)
 
-    const handleDateChange = (dateTime: Date | null): void => {
+    const handleDateChange = (type: Type, dateTime: Date | null): void => {
         if(dateTime){
-            dispatch(updateStartTime(dateTime.toString()))
+            type === 'add' && dispatch(updateStartTime(dateTime.toString()))
             const newEndTime = calculateEndDate(dateTime, timeEnd, timeStart)
-            dispatch(updateEndTime(newEndTime.toString()))
+            type === 'add' && dispatch(updateEndTime(newEndTime.toString()))
         }
     }
 
-    const handleTotalDurationBlur = (e: FocusEvent): void => {
+    const handleTotalDurationBlur = (type: Type, e: FocusEvent): void => {
         const { isValid, colon } = checkString(e.target.value)
         if( isValid && (colon < 3)){
             const timeDuration = convertDurationToHrsMinsSecs(e.target.value)
             const newEndTime = calculateEndTime(timeStart, timeDuration)
-            dispatch(updateEndTime(newEndTime.toString()))
-            setEndDateTime(getFormattedTime(newEndTime))
-            dispatch(updateDuration(timeDuration))
-            setDuration(timeDuration)
+            
+            if(type === 'add'){
+                dispatch(updateEndTime(newEndTime.toString()))
+                setEndDateTime(getFormattedTime(newEndTime))
+                dispatch(updateDuration(timeDuration))
+                setDuration(timeDuration)
+            }
             
         }
         else{
-            setDuration(duration)
+            type === 'add' && setDuration(duration)
         }
     }
 
@@ -139,29 +145,36 @@ export function TimeTracker(){
         }
     }
 
+    const entriesByWeek = groupEntriesByWeek(data)
+
     return (
-        <AddTask
-            onToggle={toggleProject}
-            selectedProject={selectedProject}
-            selectedClient={selectedClient}
-            timeStart={new Date(startTime)}
-            timeEnd={new Date(endTime)}
-            isModalOpen={isModalOpen}
-            taskDescription={taskName}
-            start={startDateTime}
-            end={endDateTime}
-            totalDuration={totalDuration}
-            days={days}
-            onNameChange={(e) =>  dispatch(updateTaskName(e.target.value))}
-            onStartChange={(e) =>  setStartDateTime(e.target.value)}
-            onEndChange={(e) =>  setEndDateTime(e.target.value)}
-            onDurationChange={(e) =>  setDuration(e.target.value)}
-            onStartBlur={handleStartTimeBlur}
-            onEndBlur={handleEndTimeBlur}
-            onDurationBlur={handleTotalDurationBlur}
-            onDateChange={handleDateChange}
-            onAddTask={addTask}
-            onEnter={handleEnter}
-        />
+        <>
+            <AddTimeEntry
+                onToggle={toggleProject}
+                selectedProject={selectedProject}
+                selectedClient={selectedClient}
+                timeStart={new Date(startTime)}
+                timeEnd={new Date(endTime)}
+                isModalOpen={isModalOpen}
+                taskDescription={taskName}
+                start={startDateTime}
+                end={endDateTime}
+                totalDuration={totalDuration}
+                days={days}
+                onNameChange={(e) =>  dispatch(updateTaskName(e.target.value))}
+                onStartChange={(e) =>  setStartDateTime(e.target.value)}
+                onEndChange={(e) =>  setEndDateTime(e.target.value)}
+                onDurationChange={(e) =>  setDuration(e.target.value)}
+                onStartBlur={handleStartTimeBlur}
+                onEndBlur={handleEndTimeBlur}
+                onDurationBlur={handleTotalDurationBlur}
+                onDateChange={handleDateChange}
+                onAddTask={addTask}
+                onEnter={handleEnter}
+            />
+            <TimeEntries
+                entriesByWeek={entriesByWeek}
+            />
+        </>
     )
 }

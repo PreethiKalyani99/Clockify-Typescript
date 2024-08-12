@@ -29,7 +29,7 @@ export function AddTimeEntry(props: AddTimeEntryProp) {
                         data-testid="start-time"
                         type="text"
                         name="startTime"
-                        onBlur={props.onStartBlur}
+                        onBlur={(e) => props.onStartBlur('add', e)}
                         onChange={props.onStartChange}
                         value={props.start}
                     ></input>
@@ -39,7 +39,7 @@ export function AddTimeEntry(props: AddTimeEntryProp) {
                         data-testid="end-time"
                         type="text"
                         name="endTime"
-                        onBlur={props.onEndBlur}
+                        onBlur={(e) => props.onEndBlur('add', e)}
                         onChange={props.onEndChange}
                         value={props.end}
                     ></input>
@@ -48,7 +48,7 @@ export function AddTimeEntry(props: AddTimeEntryProp) {
                         className="dateIcon"
                         id="date-picker"
                         selected={props.timeStart}
-                        onChange={props.onDateChange}
+                        onChange={(e) => props.onDateChange('add', e)}
                         showTimeSelect={false}
                         dateFormat="yyyy-MM-dd"
                         customInput={
@@ -64,7 +64,7 @@ export function AddTimeEntry(props: AddTimeEntryProp) {
                         data-testid="task-duration"
                         type='text'
                         className='durationBox'
-                        onBlur={props.onDurationBlur}
+                        onBlur={(e) => props.onDurationBlur('add', e)}
                         onChange={props.onDurationChange}
                         value={props.totalDuration}
                     />
