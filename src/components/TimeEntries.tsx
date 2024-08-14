@@ -13,7 +13,10 @@ function TimeEntryList(props : TimeEntryListProp){
                         className={`task-sub-container ${props.entries.length - 1 !== index ? 'border-style' : ''}`}
                         key={index}
                     >
-                        <SingleTimeEntry/>
+                        <SingleTimeEntry
+                            key={index}
+                            entry={entry}
+                        />
                     </div>
                 ))}
             </div>
