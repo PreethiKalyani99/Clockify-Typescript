@@ -196,3 +196,8 @@ export type DayEntriesProp = TimeEntryListProp & {
 export type TimeEntryListProp = {
     entries: TimeEntriesValues[]
 }
+
+export type SingleTimeEntryProp = {
+    entry: TimeEntriesValues
+    
+}
