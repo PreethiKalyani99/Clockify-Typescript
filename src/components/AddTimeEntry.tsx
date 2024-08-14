@@ -3,15 +3,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import { getFormattedDate } from "../utils/dateFunctions";
 import circledPlusIcon from '../assets/icons/circledPlusIcon.png'
 import { AddTimeEntryProp } from "../types/types";
-import { getSelectedProjectAndClient } from "../utils/getSelectedProjectClient";
+import { getSelectedProjectAndClient } from "../utils/getSelectedProjectAndClient";
 
 export function AddTimeEntry(props: AddTimeEntryProp) {
     return (
         <>
-            <div className={props.isModalOpen ? "add-task-container" : "add-task-container zIndex"} data-testid="container">
+            <div className={props.isModalOpen ? "add-task-container" : "add-task-container zIndex"}>
                 <div className="description-project-container">
                     <input
-                        data-testid="task-name"
                         type="text"
                         placeholder="What are you working on?"
                         className="input-box"
@@ -33,7 +32,6 @@ export function AddTimeEntry(props: AddTimeEntryProp) {
                 <div className="add-sub-container">
                     <input
                         className="startTimeBox"
-                        data-testid="start-time"
                         type="text"
                         name="startTime"
                         onBlur={(e) => props.onStartBlur(e)}
@@ -43,7 +41,6 @@ export function AddTimeEntry(props: AddTimeEntryProp) {
                     <span className="mt-2 ms-2 me-2">-</span>
                     <input
                         className="endTimeBox"
-                        data-testid="end-time"
                         type="text"
                         name="endTime"
                         onBlur={(e) => props.onEndBlur(e)}
@@ -68,14 +65,13 @@ export function AddTimeEntry(props: AddTimeEntryProp) {
                         {getFormattedDate(props.timeStart)}
                     </p>
                     <input
-                        data-testid="task-duration"
                         type='text'
                         className='durationBox'
                         onBlur={(e) => props.onDurationBlur(e)}
                         onChange={props.onDurationChange}
                         value={props.totalDuration}
                     />
-                    <button onClick={props.onAddTask} data-testid="add-task" className="addButton">
+                    <button onClick={props.onAddTask} className="addButton">
                         Add
                     </button>
                 </div>
