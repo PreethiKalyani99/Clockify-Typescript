@@ -8,7 +8,7 @@ export function groupEntriesByWeek(timeEntries:Data[]){
         const dateStr = getFormattedDate(new Date(timeEntry.timeInterval.start))
         let timeEntryDate = new Date(timeEntry.timeInterval.start)
 
-        const { date: currentEntryStartDate, year: currentEntryYear, month: currentEntryMonth} = splitToDateComponents(timeEntryDate)
+        const { date: currentEntryDate, year: currentEntryYear, month: currentEntryMonth} = splitToDateComponents(timeEntryDate)
 
         let firstDayOfWeek = timeEntryDate.getDate() - timeEntryDate.getDay()
         let lastDayOfWeek = firstDayOfWeek + Constants.DAYS_TO_END_OF_WEEK
@@ -17,20 +17,17 @@ export function groupEntriesByWeek(timeEntries:Data[]){
 
         let { date: weekEndDate, year: weekEndYear, month: weekEndMonth} = splitToDateComponents(new Date(timeEntryDate.setDate(lastDayOfWeek)))
 
+
         if((weekEndMonth === Constants.LAST_MONTH_OF_YEAR && currentEntryMonth < weekEndMonth) ||  // Eg: Dec(week end month) === Dec && Jan(currentMonth) < Dec(week end month)
-            (currentEntryStartDate < weekStartDate && currentEntryMonth > weekEndMonth))           // Eg: 3(current date) < 31(week start date) && Aug(current month) > July(week end month)
+            (currentEntryDate < weekStartDate && currentEntryMonth > weekEndMonth))           // Eg: 3(current date) < 31(week start date) && Aug(current month) > July(week end month)
         {
             if(currentEntryYear > weekEndYear){      // Eg: 2025(current year) > 2024 (week end year)
                 weekEndMonth = currentEntryMonth
                 weekEndYear += 1
             }
             else{
-                weekEndMonth = currentEntryMonth
+                weekEndMonth = currentEntryMonth // sep 29 (week start date) to oct 5 (week end date)  ----> oct 1 (current entry date)
             }
-        }
-        else{
-            weekEndYear = new Date(timeEntryDate.setDate(lastDayOfWeek)).getFullYear()
-            weekEndMonth = new Date(timeEntryDate.setDate(lastDayOfWeek)).getMonth() + 1
         }
 
         let weekRange = `${weekStartYear}-${weekStartMonth}-${weekStartDate} to ${weekEndYear}-${weekEndMonth}-${weekEndDate}`
