@@ -182,6 +182,7 @@ export type CheckString = {
 
 export type TimeEntriesProp = {
     entriesByWeek: EntriesByWeek
+    projects: Project[] 
 }
 
 export type EntriesByWeek = {
@@ -194,6 +195,7 @@ export type EntriesByWeek = {
 export type WeekEntriesProp = {
     range: string
     timeEntries: { [date: string]: TimeEntriesValues[] }
+    projects: Project[]
 }
 
 export type DayEntriesProp = TimeEntryListProp & {
@@ -202,10 +204,12 @@ export type DayEntriesProp = TimeEntryListProp & {
 
 export type TimeEntryListProp = {
     entries: TimeEntriesValues[]
+    projects: Project[]
 }
 
 export type SingleTimeEntryProp = {
     entry: TimeEntriesValues
+    projects: Project[]
     
 }
 
@@ -225,8 +229,6 @@ export type ProjectProps = {
     setShowProjects: React.Dispatch<React.SetStateAction<boolean>>
     selectedProject: SelectedOption
     selectedClient: SelectedOption
-    projects: ProjectData[]
-    clients: ClientData[]
     setSelectedProject?: React.Dispatch<React.SetStateAction<SelectedOption>>
     setSelectedClient?: React.Dispatch<React.SetStateAction<SelectedOption>>
     timeEntry?: TimeEntriesValues

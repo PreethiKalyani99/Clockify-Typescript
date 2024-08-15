@@ -16,6 +16,7 @@ function TimeEntryList(props : TimeEntryListProp){
                         <SingleTimeEntry
                             key={index}
                             entry={entry}
+                            projects={props.projects}
                         />
                     </div>
                 ))}
@@ -33,7 +34,7 @@ function DayEntries(props: DayEntriesProp){
                 Total: <span className="total-time ms-2">{addTotalTime(props.entries)}</span>
             </p>
         </div>
-        {props.entries.length > 0 && <TimeEntryList entries={props.entries} />}
+        {props.entries.length > 0 && <TimeEntryList entries={props.entries} projects={props.projects}/>}
     </div>
     )
 }
@@ -51,7 +52,7 @@ function WeekEntries(props: WeekEntriesProp){
 
             <div>
             {Object.entries(props.timeEntries).map(([date, entries]) => (
-                <DayEntries key={date} date={date} entries={entries} />
+                <DayEntries key={date} date={date} entries={entries} projects={props.projects}/>
             ))}
             </div>
         </div>
@@ -66,6 +67,7 @@ export function TimeEntries(props: TimeEntriesProp){
                     key={range}
                     range={range}
                     timeEntries={timeEntries}
+                    projects={props.projects}
                 />
             ))}
         </div>

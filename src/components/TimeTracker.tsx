@@ -151,6 +151,7 @@ export function TimeTracker(){
             />
             <TimeEntries
                 entriesByWeek={entriesByWeek}
+                projects={projects}
             />
         </>
     )
