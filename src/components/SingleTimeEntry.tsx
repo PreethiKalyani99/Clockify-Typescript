@@ -1,29 +1,44 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "../redux/store"
 import { getFormattedTime, calculateDays, calculateEndDate } from "../utils/dateFunctions"
-import { SingleTimeEntryProp, FocusEvent, Constants } from "../types/types"
+import { SingleTimeEntryProp, FocusEvent, Constants, SelectedOption } from "../types/types"
 import { onStartTimeBlur, onEndTimeBlur, onDurationBlur } from "../utils/onBlurFunctions"
 import { updateTimeEntry } from "../redux/clockifyThunk"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import threeDotsIcon from '../assets/icons/menu.png'
 import { parseISODuration } from "../utils/checkString"
+import circledPlusIcon from '../assets/icons/circledPlusIcon.png'
+import { getSelectedProjectAndClient } from "../utils/getSelectedProjectAndClient"
+import { Project } from "./Project"
 
-export function SingleTimeEntry({ entry }: SingleTimeEntryProp){
+export function SingleTimeEntry({ entry, projects }: SingleTimeEntryProp){
     const dispatch = useDispatch<AppDispatch>()
 
     const timeStart = new Date(entry.timeInterval.start)
     const timeEnd = new Date(entry.timeInterval.end)
     
     const [showActionItems, setShowActionItems] = useState(false)
+    const [showProjects, setShowProjects] = useState(false) 
 
     const [taskDescription, setTaskDescription] = useState(entry.description)
     const [startDateTime, setStartDateTime] = useState(getFormattedTime(timeStart))
     const [endDateTime, setEndDateTime] = useState(getFormattedTime(timeEnd))
     const [duration, setDuration] = useState(parseISODuration(entry.timeInterval.duration || '00:00:00'))
     const [days, setDays] = useState(calculateDays(timeStart, timeEnd))
+
+    const [selectedProject, setSelectedProject] = useState({value: entry?.projectId || '', label: entry?.project?.name  || 'Project'})
+    const [selectedClient, setSelectedClient] = useState({value: entry?.project?.clientId  || '', label: entry?.project?.clientName  || ''})
  
+
+    useEffect(() => {
+        const projectValue = projects?.find(project => project.id === selectedProject.value)
+        if(projectValue){
+            setSelectedProject({value: projectValue?.id, label: projectValue?.name})
+            setSelectedClient({value: projectValue.clientId ?? '', label: projectValue.clientName})
+        }
+    }, [projects, selectedProject.value])
 
     const handleStartTimeBlur = (e: FocusEvent): void => {
         const { isValid, start: newStart, end: newEnd, duration: newDuration } = onStartTimeBlur(e.target.value, timeEnd)
@@ -39,7 +54,7 @@ export function SingleTimeEntry({ entry }: SingleTimeEntryProp){
             description: entry.description, 
             start: newStart.toISOString().split('.')[0] + 'Z', 
             end: newEnd.toISOString().split('.')[0] + 'Z', 
-            id: entry.id, 
+            id: entry.id,  
             projectId: entry.projectId
         }))
     }
@@ -98,6 +113,18 @@ export function SingleTimeEntry({ entry }: SingleTimeEntryProp){
         }))
 
     }
+
+    const handleSelect = (value: SelectedOption) => {
+        setSelectedProject(value)
+        setShowProjects(false)
+        dispatch(updateTimeEntry({
+            id: entry.id, 
+            start: entry.timeInterval.start, 
+            end: entry.timeInterval.end, 
+            description: entry.description,
+            projectId: value.value
+        }))
+    }
     return(
         <>
             <div className="task-container">
@@ -108,6 +135,19 @@ export function SingleTimeEntry({ entry }: SingleTimeEntryProp){
                     value={taskDescription || ''}
                     onChange={(e) => setTaskDescription(e.target.value)}
                 ></input>
+                <button 
+                    onClick={() => setShowProjects(!showProjects)}
+                    className={selectedProject.label === 'Project' ? "project-text-color task-project-text" : "task-project-text"}
+                >  
+                    { selectedProject.label === 'Project' && 
+                        <img 
+                            src={circledPlusIcon} 
+                            alt="Circled Plus Icon" 
+                            style={{ width: '20px', height: '20px', marginRight: '5px'}}
+                        />
+                    }
+                    {getSelectedProjectAndClient(selectedProject, selectedClient)}
+                </button> 
                 <div className="task-time-container">
                     <input
                         className="startTimeBox"
@@ -152,6 +192,19 @@ export function SingleTimeEntry({ entry }: SingleTimeEntryProp){
                 <button className="three-dots" onClick={() => setShowActionItems(!showActionItems)}>
                     <img src={threeDotsIcon} alt="menu Icon" style={{ width: '25px', height: '25px'}}/>
                 </button>
+            </div>
+            <div className= {showProjects ? "" : ''}>
+                {showProjects && 
+                    <Project 
+                        onSelect={handleSelect}
+                        setShowProjects={setShowProjects}
+                        selectedProject={selectedProject}
+                        setSelectedProject={setSelectedProject}
+                        selectedClient={selectedClient}
+                        setSelectedClient={setSelectedClient}
+                        timeEntry={entry}
+                    />
+                }    
             </div>
         </>
     )
