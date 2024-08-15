@@ -253,7 +253,3 @@ export type CreateClientProp = {
 export type CreateProjectProp = CreateClientProp & {
     clientId: string | null
 }
-
-export type CreateProjectResponse = {
-   payload: Project | undefined
-}

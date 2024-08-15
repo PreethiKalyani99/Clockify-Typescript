@@ -4,7 +4,7 @@ import { Modal, ModalHeader, ModalTitle, ModalBody, ModalFooter, Button } from "
 import { useDispatch } from "react-redux";
 import { setIsModalOpen, updateClientValue, updateProjectValue } from "../redux/clockifySlice";
 import { createClient, createProject, updateTimeEntry } from "../redux/clockifyThunk";
-import { CreateNewProjectProps, SelectedOption, ChangeEvent, CreateProjectResponse  } from "../types/types";
+import { CreateNewProjectProps, SelectedOption, ChangeEvent, Project  } from "../types/types";
 import { AppDispatch } from "../redux/store";
 import { SingleValue } from "react-select";
 
@@ -36,7 +36,7 @@ export function CreateNewProject(props: CreateNewProjectProps){
     function handleCreateOption(input: string){
         const isClientExists = props.clients.some(client => client.name === input)
         if(!isClientExists){
-            dispatch(createClient({name: input}))
+            dispatch(createClient({ name: input }))
             if(!props.setSelectedClient){
                 dispatch(updateClientValue({ label: input, value: '' }))
                 return
@@ -47,22 +47,25 @@ export function CreateNewProject(props: CreateNewProjectProps){
 
     async function addProject(){
         const clientInfo = props?.clients?.find(item => item.name === props.selectedClient.label)
-        const response: CreateProjectResponse = await dispatch(createProject({
+        const response = await dispatch(createProject({
             name: projectInput,
             clientId: clientInfo ? clientInfo.id : null
         }))
+
+        const projectInfo =  response.payload as Project | undefined
+
         if(!props.setSelectedProject){
-            dispatch(updateProjectValue({value: response?.payload?.id ?? '', label: projectInput}))
+            dispatch(updateProjectValue({value: projectInfo?.id ?? '', label: projectInput}))
             dispatch(updateClientValue({value: clientInfo?.id ?? '', label: props.selectedClient.label}))
         }
         else{
-            props.setSelectedProject({value: response?.payload?.id ?? '', label: projectInput})
+            props.setSelectedProject({value: projectInfo?.id ?? '', label: projectInput})
             props.timeEntry && dispatch(updateTimeEntry({
                 id: props.timeEntry.id, 
                 start: props.timeEntry.timeInterval.start, 
                 end: props.timeEntry.timeInterval.end, 
                 description: props.timeEntry.description,
-                projectId: response?.payload?.id ?? ''
+                projectId: projectInfo?.id ?? ''
             }))
         }
         setProjectInput('')

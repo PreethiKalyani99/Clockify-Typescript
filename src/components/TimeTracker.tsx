@@ -17,7 +17,7 @@ import {
 import { groupEntriesByWeek } from "../utils/groupValues";
 import { RootState, AppDispatch } from "../redux/store";
 import { FocusEvent, KeyboardEvent, Constants, SelectedOption } from "../types/types";
-import { createTimeEntry, getUserTimeEntries } from "../redux/clockifyThunk";
+import { createTimeEntry, getUserTimeEntries, getProjects, getClients } from "../redux/clockifyThunk";
 import { TimeEntries } from "./TimeEntries";
 import { onStartTimeBlur, onEndTimeBlur, onDurationBlur } from "../utils/onBlurFunctions";
 
@@ -37,6 +37,8 @@ export function TimeTracker(){
 
     useEffect(() => {
         dispatch(getUserTimeEntries())
+        dispatch(getProjects())
+        dispatch(getClients())
     }, [dispatch])
     
     const handleStartTimeBlur = (e: FocusEvent): void => {
