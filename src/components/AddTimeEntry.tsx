@@ -4,6 +4,7 @@ import { getFormattedDate } from "../utils/dateFunctions";
 import circledPlusIcon from '../assets/icons/circledPlusIcon.png'
 import { AddTimeEntryProp } from "../types/types";
 import { getSelectedProjectAndClient } from "../utils/getSelectedProjectAndClient";
+import { Project } from "./Project";
 
 export function AddTimeEntry(props: AddTimeEntryProp) {
     return (
@@ -52,7 +53,7 @@ export function AddTimeEntry(props: AddTimeEntryProp) {
                         className="dateIcon"
                         id="date-picker"
                         selected={props.timeStart}
-                        onChange={(e) => props.onDateChange(e)}
+                        onChange={props.onDateChange}
                         showTimeSelect={false}
                         dateFormat="yyyy-MM-dd"
                         customInput={
@@ -75,6 +76,18 @@ export function AddTimeEntry(props: AddTimeEntryProp) {
                         Add
                     </button>
                 </div>
+            </div>
+            <div className= {props.showProjects ? "project-dropdown" : ''}>
+                {props.showProjects && 
+                    <Project 
+                        onSelect={props.onProjectSelect}
+                        setShowProjects={props.setShowProjects}
+                        selectedProject={props.selectedProject}
+                        selectedClient={props.selectedClient}
+                        projects={props.projects} 
+                        clients={props.clients}
+                    /> 
+                }    
             </div>
         </>
     )
