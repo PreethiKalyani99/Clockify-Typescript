@@ -113,6 +113,8 @@ export type InitialState = {
     isModalOpen: boolean,
     selectedProject: SelectedOption,
     selectedClient: SelectedOption,
+    projects: ProjectData[],
+    clients: ClientData[],
     currentTask: CurrentTask
 }
 
@@ -160,6 +162,11 @@ export type AddTimeEntryProp = {
     onDateChange: (dateTime: Date | null) => void
     onAddTask: () => void
     onEnter: (e: KeyboardEvent) => void
+    setShowProjects: React.Dispatch<React.SetStateAction<boolean>>
+    showProjects: boolean
+    onProjectSelect: (value: SelectedOption) => void
+    projects: ProjectData[],
+    clients: ClientData[]
 }
 
 export type HoursAndMinutesProp = {
@@ -200,4 +207,58 @@ export type TimeEntryListProp = {
 export type SingleTimeEntryProp = {
     entry: TimeEntriesValues
     
+}
+
+export type projects = {
+    name: string
+    id: string
+}
+export type ClientsAndProjects = {
+    [clientName: string]: {
+        projectKeys: Set<string>
+        projects: projects[]
+    }
+}
+
+export type ProjectProps = {
+    onSelect: (value: SelectedOption) => void
+    setShowProjects: React.Dispatch<React.SetStateAction<boolean>>
+    selectedProject: SelectedOption
+    selectedClient: SelectedOption
+    projects: ProjectData[]
+    clients: ClientData[]
+    setSelectedProject?: React.Dispatch<React.SetStateAction<SelectedOption>>
+    setSelectedClient?: React.Dispatch<React.SetStateAction<SelectedOption>>
+    timeEntry?: TimeEntriesValues
+}
+
+export type CreateNewProjectProps = {
+    isOpen: boolean
+    setShowProjects: React.Dispatch<React.SetStateAction<boolean>>
+    selectedProject: SelectedOption
+    selectedClient: SelectedOption
+    setSelectedProject?: React.Dispatch<React.SetStateAction<SelectedOption>>
+    setSelectedClient?: React.Dispatch<React.SetStateAction<SelectedOption>>
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+    projects: ProjectData[]
+    clients: ClientData[]
+    timeEntry: TimeEntriesValues
+    setShowPopup: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export type CreateClientProp = {
+    name: string
+}
+
+export type CreateProjectProp = CreateClientProp & {
+    clientId: string | null
+}
+
+export type CreateProjectResponse = {
+   payload: {
+    name: string
+    id: string
+    clientId: string
+    clientName: string
+   }
 }
