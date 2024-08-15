@@ -1,6 +1,23 @@
-import { getFormattedDate, splitToDateComponents } from "./dateFunctions";
-import { Data, EntriesByWeek, Constants } from "../types/types";
+import { ProjectData, ClientsAndProjects, Data, EntriesByWeek, Constants } from "../types/types"
+import { getFormattedDate, splitToDateComponents } from "./dateFunctions"
 
+export function groupProjectsAndClients(projects: ProjectData[]) {
+    let clientsAndProjects: ClientsAndProjects = {}
+    projects.forEach(item => {
+        let clientName = item.clientName || "No Client"
+        if (!clientsAndProjects[clientName]) {
+            clientsAndProjects[clientName] = { projects: [], projectKeys: new Set() }
+        }
+
+        let projectKey = `${item.name}-${item.id}`
+
+        if (!clientsAndProjects[clientName].projectKeys.has(projectKey)) {
+            clientsAndProjects[clientName].projects.push({ name: item.name, id: item.id })
+            clientsAndProjects[clientName].projectKeys.add(projectKey)
+        }
+    })
+    return clientsAndProjects
+}
 
 export function groupEntriesByWeek(timeEntries:Data[]){
     let timeEntriesByWeek: EntriesByWeek = {}
