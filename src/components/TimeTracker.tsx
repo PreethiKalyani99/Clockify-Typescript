@@ -3,25 +3,26 @@ import { useSelector, useDispatch } from "react-redux";
 import { AddTimeEntry } from "./AddTimeEntry";
 import { 
     updateStartTime, 
-    updateEndTime, 
-    updateTaskName, 
+    updateEndTime,  
+    updateTaskName,
     updateDuration,
-    resetState
+    resetState,
+    updateProjectValue,
 } from "../redux/clockifySlice";
 import { 
     calculateEndDate, 
     getFormattedTime, 
     calculateDays, 
 } from "../utils/dateFunctions";
-import { groupEntriesByWeek } from "../utils/groupEntriesByWeek";
+import { groupEntriesByWeek } from "../utils/groupValues";
 import { RootState, AppDispatch } from "../redux/store";
-import { FocusEvent, KeyboardEvent, Constants } from "../types/types";
+import { FocusEvent, KeyboardEvent, Constants, SelectedOption } from "../types/types";
 import { createTimeEntry, getUserTimeEntries } from "../redux/clockifyThunk";
 import { TimeEntries } from "./TimeEntries";
 import { onStartTimeBlur, onEndTimeBlur, onDurationBlur } from "../utils/onBlurFunctions";
 
 export function TimeTracker(){
-    const { isModalOpen, currentTask, selectedProject, selectedClient, data} = useSelector((state: RootState) => state.clockify)
+    const { isModalOpen, currentTask, selectedProject, selectedClient, data, projects, clients} = useSelector((state: RootState) => state.clockify)
     const {startTime, endTime, duration, taskName} = currentTask
 
     const timeStart = new Date(startTime)
@@ -46,7 +47,7 @@ export function TimeTracker(){
         }
         dispatch(updateStartTime(newStart.toString()))
         setStartDateTime(getFormattedTime(newStart))
-        dispatch(updateEndTime(end.toString()))
+        dispatch(updateEndTime(end.toString())) 
         setDuration(newDuration)
     }
 
@@ -109,6 +110,11 @@ export function TimeTracker(){
         }
     }
 
+    const handleSelect = (value: SelectedOption) => {
+        dispatch(updateProjectValue(value))
+        setShowProjects(false)
+    }
+
     const entriesByWeek = groupEntriesByWeek(data)
 
     return (
@@ -135,6 +141,11 @@ export function TimeTracker(){
                 onDateChange={handleDateChange}
                 onAddTask={addTask}
                 onEnter={handleEnter}
+                setShowProjects={setShowProjects}
+                showProjects={showProjects}
+                onProjectSelect={handleSelect}
+                projects={projects}
+                clients={clients}
             />
             <TimeEntries
                 entriesByWeek={entriesByWeek}
