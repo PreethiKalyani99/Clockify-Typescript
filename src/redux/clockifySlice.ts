@@ -3,7 +3,7 @@ import {
     createTimeEntry,
     getUserTimeEntries
 } from "./clockifyThunk";
-import { InitialState, Data } from "../types/types";
+import { InitialState, Data, SelectedOption } from "../types/types";
 
 const initialState : InitialState = {
     isLoading: false,
@@ -11,6 +11,8 @@ const initialState : InitialState = {
     isModalOpen: false,
     selectedProject: {value: '', label: 'Project'},
     selectedClient: {value: '', label: ''},
+    projects: [],
+    clients: [],
     currentTask: {
         startTime: new Date().toString(),
         endTime: new Date().toString(),
@@ -47,6 +49,12 @@ export const ClockifySlice = createSlice({
             state.currentTask.duration = '00:00:00'
             state.selectedProject = {value: '', label: 'Project'}
             state.selectedClient = {value: '', label: ''}
+        },
+        updateProjectValue: (state, action: PayloadAction<SelectedOption>) => {
+            state.selectedProject = action.payload
+        },
+        updateClientValue: (state, action: PayloadAction<SelectedOption>) => {
+            state.selectedClient = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -74,4 +82,6 @@ export const {
     updateDuration,
     updateTaskName,
     resetState,
+    updateClientValue,
+    updateProjectValue
 } = ClockifySlice.actions
