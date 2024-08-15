@@ -237,12 +237,12 @@ export type CreateNewProjectProps = {
     setShowProjects: React.Dispatch<React.SetStateAction<boolean>>
     selectedProject: SelectedOption
     selectedClient: SelectedOption
-    setSelectedProject?: React.Dispatch<React.SetStateAction<SelectedOption>>
-    setSelectedClient?: React.Dispatch<React.SetStateAction<SelectedOption>>
+    setSelectedProject?: React.Dispatch<React.SetStateAction<SelectedOption>> | null
+    setSelectedClient?: React.Dispatch<React.SetStateAction<SelectedOption>> | null
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
     projects: ProjectData[]
     clients: ClientData[]
-    timeEntry: TimeEntriesValues
+    timeEntry?: TimeEntriesValues
     setShowPopup: React.Dispatch<React.SetStateAction<boolean>>
 }
 
