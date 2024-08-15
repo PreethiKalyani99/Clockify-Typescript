@@ -84,8 +84,6 @@ export function AddTimeEntry(props: AddTimeEntryProp) {
                         setShowProjects={props.setShowProjects}
                         selectedProject={props.selectedProject}
                         selectedClient={props.selectedClient}
-                        projects={props.projects} 
-                        clients={props.clients}
                     /> 
                 }    
             </div>

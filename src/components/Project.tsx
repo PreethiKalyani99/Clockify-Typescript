@@ -1,11 +1,11 @@
 import { useState } from "react";
 import Select, { components, MenuListProps } from 'react-select';
 import { CreateNewProject } from "./CreateNewProject";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setIsModalOpen } from "../redux/clockifySlice";
 import { ClientsAndProjects, ProjectProps } from "../types/types";
 import { groupProjectsAndClients } from "../utils/groupValues";
-import { AppDispatch } from "../redux/store";
+import { AppDispatch, RootState } from "../redux/store";
 
 function customOptions(clientsAndProjects: ClientsAndProjects){
     if (!clientsAndProjects) {
@@ -21,8 +21,10 @@ function customOptions(clientsAndProjects: ClientsAndProjects){
 }
 
 export function Project(props: ProjectProps){
+    const { projects, clients} = useSelector((state: RootState) => state.clockify)
+
     const [showPopup, setShowPopup] = useState(false)
-    const projectsAndClients = groupProjectsAndClients(props.projects)
+    const projectsAndClients = groupProjectsAndClients(projects)
     const options = customOptions(projectsAndClients)
     const [isOpen, setIsOpen] = useState(false)
     const dispatch = useDispatch<AppDispatch>()
@@ -76,8 +78,8 @@ export function Project(props: ProjectProps){
                     selectedClient={props.selectedClient}
                     setSelectedClient={props?.setSelectedClient || null}
                     setIsOpen={setIsOpen}
-                    projects={props.projects}
-                    clients={props.clients}
+                    projects={projects}
+                    clients={clients}
                     timeEntry={props.timeEntry}
                     setShowPopup={setShowPopup}
                 />
