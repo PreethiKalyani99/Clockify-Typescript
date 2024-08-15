@@ -76,7 +76,7 @@ export type CurrentTask = {
 }
 
 export type Project = {
-    clientId: string
+    clientId: string | null
     clientName: string
     color: string
     duration: string
@@ -255,10 +255,5 @@ export type CreateProjectProp = CreateClientProp & {
 }
 
 export type CreateProjectResponse = {
-   payload: {
-    name: string
-    id: string
-    clientId: string
-    clientName: string
-   }
+   payload: Project | undefined
 }
