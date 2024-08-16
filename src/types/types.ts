@@ -122,7 +122,7 @@ export type UpdateTimerProp = {
     name: string
     project: string
     client: string
-    projectId: string
+    projectId: string | null
     clientId: string
 }
 
@@ -180,9 +180,8 @@ export type CheckString = {
     numberOfColons: number
 }
 
-export type TimeEntriesProp = {
+export type TimeEntriesProp = TimeEntryCommonProp & {
     entriesByWeek: EntriesByWeek
-    projects: Project[] 
 }
 
 export type EntriesByWeek = {
@@ -192,24 +191,21 @@ export type EntriesByWeek = {
 }
 
 
-export type WeekEntriesProp = {
+export type WeekEntriesProp = TimeEntryCommonProp & {
     range: string
     timeEntries: { [date: string]: TimeEntriesValues[] }
-    projects: Project[]
 }
 
 export type DayEntriesProp = TimeEntryListProp & {
     date: string 
 }
 
-export type TimeEntryListProp = {
+export type TimeEntryListProp = TimeEntryCommonProp & {
     entries: TimeEntriesValues[]
-    projects: Project[]
 }
 
-export type SingleTimeEntryProp = {
+export type SingleTimeEntryProp = TimeEntryCommonProp & {
     entry: TimeEntriesValues
-    projects: Project[]
     
 }
 
@@ -254,4 +250,27 @@ export type CreateClientProp = {
 
 export type CreateProjectProp = CreateClientProp & {
     clientId: string | null
+}
+
+export type TimeEntryCommonProp = {
+    projects: Project[]
+    toggleTimer: () => void
+}
+
+export type TimerProps = {
+    totalTime: string
+    isModalOpen: boolean
+    onNameChange: (e: ChangeEvent) => void
+    taskName: string
+    onToggleProject: () => void
+    selectedProject: SelectedOption
+    selectedClient: SelectedOption
+    isTimerOn: boolean
+    onTimerStop: () => void
+    ontoggleActionItem: () => void
+    showActionItems: boolean
+    onDiscard: () => void
+    showProjects: boolean
+    setShowProjects: React.Dispatch<React.SetStateAction<boolean>>
+    onProjectSelect: (value: SelectedOption) => void
 }

@@ -85,6 +85,14 @@ export function calculateEndTime(startTime: Date, duration: string): Date{
     return startDate
 }
 
+export function convertMilliSecsToHrsMinsSec(totalTimeInMS: number){
+    const sec = Math.floor((totalTimeInMS / Constants.MS_PER_SEC) % Constants.TIME_DIVISOR)
+    const min = Math.floor((totalTimeInMS / (Constants.MS_PER_MIN)) % Constants.TIME_DIVISOR)
+    const hrs = Math.floor((totalTimeInMS / (Constants.MS_PER_HR)))
+
+    return `${hrs.toString().padStart(2,'0')}:${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`
+}
+
 export function addTotalTime(tasks: Data[]){
     const totalTimeInMS = tasks.reduce((acc, cur) => {
        const [hours, minutes, seconds] = (parseISODuration(cur.timeInterval.duration)).split(':').map(Number)
@@ -92,9 +100,5 @@ export function addTotalTime(tasks: Data[]){
        return acc
     }, 0)
 
-    const sec = Math.floor((totalTimeInMS / Constants.MS_PER_SEC) % Constants.TIME_DIVISOR)
-    const min = Math.floor((totalTimeInMS / (Constants.MS_PER_MIN)) % Constants.TIME_DIVISOR)
-    const hrs = Math.floor((totalTimeInMS / (Constants.MS_PER_HR)))
-
-    return `${hrs.toString().padStart(2,'0')}:${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`
+    return convertMilliSecsToHrsMinsSec(totalTimeInMS)
 }
