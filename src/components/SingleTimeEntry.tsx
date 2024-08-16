@@ -12,8 +12,9 @@ import { parseISODuration } from "../utils/checkString"
 import circledPlusIcon from '../assets/icons/circledPlusIcon.png'
 import { getSelectedProjectAndClient } from "../utils/getSelectedProjectAndClient"
 import { Project } from "./Project"
+import { updateTimer } from "../redux/clockifySlice"
 
-export function SingleTimeEntry({ entry, projects }: SingleTimeEntryProp){
+export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntryProp){
     const dispatch = useDispatch<AppDispatch>()
 
     const timeStart = new Date(entry.timeInterval.start)
@@ -75,7 +76,7 @@ export function SingleTimeEntry({ entry, projects }: SingleTimeEntryProp){
             end: newEnd.toISOString().split('.')[0] + 'Z', 
             id: entry.id, 
             projectId: entry.projectId
-        }))
+        })) 
     }
 
     const handleDateChange = (dateTime: Date | null): void => {
@@ -188,6 +189,21 @@ export function SingleTimeEntry({ entry, projects }: SingleTimeEntryProp){
                         onChange={(e) => setDuration(e.target.value)}
                         onBlur={handleDurationBlur}
                     />
+                    <button 
+                        onClick={() => {
+                            toggleTimer()
+                            dispatch(updateTimer({
+                                name: entry.description, 
+                                project: selectedProject.label, 
+                                projectId: entry.projectId ?? null, 
+                                client: selectedClient.label, 
+                                clientId: selectedClient.value
+                            }))
+                        }}
+                        className="play-button"
+                    >
+                        <i className ="bi bi-play"></i>
+                    </button>
                 </div>
                 <button className="three-dots" onClick={() => setShowActionItems(!showActionItems)}>
                     <img src={threeDotsIcon} alt="menu Icon" style={{ width: '25px', height: '25px'}}/>
