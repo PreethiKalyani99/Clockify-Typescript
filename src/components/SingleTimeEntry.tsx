@@ -4,7 +4,7 @@ import { AppDispatch } from "../redux/store"
 import { getFormattedTime, calculateDays, calculateEndDate } from "../utils/dateFunctions"
 import { SingleTimeEntryProp, FocusEvent, Constants, SelectedOption } from "../types/types"
 import { onStartTimeBlur, onEndTimeBlur, onDurationBlur } from "../utils/onBlurFunctions"
-import { updateTimeEntry } from "../redux/clockifyThunk"
+import { updateTimeEntry, duplicateTimeEntry, deleteTimeEntry } from "../redux/clockifyThunk"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import threeDotsIcon from '../assets/icons/menu.png'
@@ -126,6 +126,17 @@ export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntr
             projectId: value.value
         }))
     }
+
+    function handleDuplicateTimeEntry(id: string){
+        dispatch(duplicateTimeEntry({id}))
+        setShowActionItems(false)
+    }
+
+    function handleDeleteTimeEntry(id: string){
+        dispatch(deleteTimeEntry({id}))
+        setShowActionItems(false)
+    }
+
     return(
         <>
             <div className="task-container">
@@ -197,7 +208,7 @@ export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntr
                                 project: selectedProject.label, 
                                 projectId: entry.projectId ?? null, 
                                 client: selectedClient.label, 
-                                clientId: selectedClient.value
+                                clientId: selectedClient.value 
                             }))
                         }}
                         className="play-button"
@@ -208,6 +219,26 @@ export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntr
                 <button className="three-dots" onClick={() => setShowActionItems(!showActionItems)}>
                     <img src={threeDotsIcon} alt="menu Icon" style={{ width: '25px', height: '25px'}}/>
                 </button>
+                <div className={showActionItems ? "action-items-container": "hide"}>
+                    <ul className="action-items">
+                        <li>
+                        <button 
+                            onClick={() => handleDuplicateTimeEntry(entry.id)}
+                            className="duplicate-btn"
+                        >
+                            Duplicate
+                        </button>
+                        </li>
+                        <li>
+                        <button 
+                            onClick={() => handleDeleteTimeEntry(entry.id)}
+                            className="delete-btn"
+                        >
+                            Delete
+                        </button>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div className= {showProjects ? "" : ''}>
                 {showProjects && 
