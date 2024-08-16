@@ -1,9 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { 
+    getUserTimeEntries,
     createTimeEntry,
-    getUserTimeEntries
+    updateTimeEntry,
+    duplicateTimeEntry,
+    deleteTimeEntry,
+    getProjects,
+    getClients,
+    createProject,
+    createClient
 } from "./clockifyThunk";
-import { InitialState, Data, SelectedOption } from "../types/types";
+import { InitialState, Data, SelectedOption, Project, ClientData, UpdateTimerProp } from "../types/types";
 
 const initialState : InitialState = {
     isLoading: false,
@@ -55,7 +62,13 @@ export const ClockifySlice = createSlice({
         },
         updateClientValue: (state, action: PayloadAction<SelectedOption>) => {
             state.selectedClient = action.payload
-        }
+        },
+        updateTimer: (state, action: PayloadAction<UpdateTimerProp>) => {
+            const {name, project, client, projectId, clientId} = action.payload
+            state.currentTask.taskName = name
+            state.selectedProject = {value: projectId ?? '', label: project}
+            state.selectedClient = {value: clientId, label: client}
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(createTimeEntry.pending, (state) => {
@@ -72,6 +85,51 @@ export const ClockifySlice = createSlice({
             state.isLoading = false
             state.data = action.payload ?? []
         })
+        .addCase(updateTimeEntry.pending, (state) => {
+            state.isLoading = true
+        })
+        .addCase(updateTimeEntry.fulfilled, (state, action: PayloadAction<Data>) => {
+            state.isLoading = false
+            const id = action.payload?.id
+            const timeEntry = state.data.find(entry => entry.id === id)
+            if (timeEntry) 
+                Object.assign(timeEntry, action.payload)
+        })
+        .addCase(duplicateTimeEntry.pending, (state) => {
+            state.isLoading = true
+        })
+        .addCase(duplicateTimeEntry.fulfilled, (state, action: PayloadAction<Data | undefined>) => {
+            state.isLoading = false
+            if(action.payload)
+                state.data = [action.payload, ...state.data]
+        })
+        .addCase(deleteTimeEntry.pending, (state) => {
+            state.isLoading = true
+        })
+        .addCase(deleteTimeEntry.fulfilled, (state, action: PayloadAction<string | undefined>) => {
+            if(action.payload){
+                const id = action.payload
+                const newData = state.data.filter(entry => entry.id !== id)
+                state.data = [...newData]
+            }
+        })
+        .addCase(getProjects.fulfilled, (state, action: PayloadAction<Project[] | undefined>) => {
+            if(action.payload)
+                state.projects = action.payload
+            
+        })
+        .addCase(getClients.fulfilled, (state, action: PayloadAction<ClientData[] | undefined>) => {
+            if(action.payload)
+                state.clients = action.payload
+        })
+        .addCase(createProject.fulfilled, (state, action: PayloadAction<Project | undefined>) => {
+            if(action.payload)
+                state.projects = [...state.projects, action.payload]
+        })
+        .addCase(createClient.fulfilled, (state, action: PayloadAction<ClientData | undefined>) => {
+            if(action.payload)
+                state.clients = [action.payload, ...state.clients]
+        })
     }
 })
 
@@ -83,5 +141,6 @@ export const {
     updateTaskName,
     resetState,
     updateClientValue,
-    updateProjectValue
+    updateProjectValue,
+    updateTimer
 } = ClockifySlice.actions
