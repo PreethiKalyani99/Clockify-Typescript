@@ -8,7 +8,7 @@ export function Timer(props: TimerProps){
    
     return (
         <>
-            <div className={props.isModalOpen ? "timer-task-container" : "timer-task-container zIndex"} data-testid="container">
+            <div className={props.isModalOpen ? "timer-task-container" : "timer-task-container z-Index"} data-testid="container">
                 <input
                     data-testid="task-name"
                     className="timer-input-box"

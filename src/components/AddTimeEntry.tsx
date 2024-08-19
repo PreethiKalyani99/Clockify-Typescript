@@ -9,7 +9,7 @@ import { Project } from "./Project";
 export function AddTimeEntry(props: AddTimeEntryProp) {
     return (
         <>
-            <div className={props.isModalOpen ? "add-task-container" : "add-task-container zIndex"}>
+            <div className={props.isModalOpen ? "add-task-container" : "add-task-container z-Index"}>
                 <div className="description-project-container">
                     <input
                         type="text"
@@ -32,7 +32,7 @@ export function AddTimeEntry(props: AddTimeEntryProp) {
                 </div>
                 <div className="add-sub-container">
                     <input
-                        className="startTimeBox"
+                        className="start-time-box"
                         type="text"
                         name="startTime"
                         onBlur={(e) => props.onStartBlur(e)}
@@ -41,7 +41,7 @@ export function AddTimeEntry(props: AddTimeEntryProp) {
                     ></input>
                     <span className="mt-2 ms-2 me-2">-</span>
                     <input
-                        className="endTimeBox"
+                        className="end-time-box"
                         type="text"
                         name="endTime"
                         onBlur={(e) => props.onEndBlur(e)}
@@ -67,7 +67,7 @@ export function AddTimeEntry(props: AddTimeEntryProp) {
                     </p>
                     <input
                         type='text'
-                        className='durationBox'
+                        className='duration-box'
                         onBlur={(e) => props.onDurationBlur(e)}
                         onChange={props.onDurationChange}
                         value={props.totalDuration}

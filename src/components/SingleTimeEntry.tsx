@@ -162,7 +162,7 @@ export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntr
                 </button> 
                 <div className="task-time-container">
                     <input
-                        className="startTimeBox"
+                        className="start-time-box"
                         type="text"
                         name="startTime"
                         value={startDateTime || '00:00'}
@@ -171,7 +171,7 @@ export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntr
                     ></input>
                     <span className="ms-2 me-2">-</span>
                     <input
-                        className="endTimeBox"
+                        className="end-time-box"
                         type="text"
                         name="endTime"
                         value={endDateTime || '00:00'}
@@ -195,7 +195,7 @@ export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntr
                     />
                     <input
                         type='text'
-                        className='durationBox'
+                        className='duration-box'
                         value={duration || '00:00:00'}
                         onChange={(e) => setDuration(e.target.value)}
                         onBlur={handleDurationBlur}

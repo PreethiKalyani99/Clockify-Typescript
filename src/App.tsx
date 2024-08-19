@@ -20,7 +20,7 @@ function App() {
   return (
     <Router  basename='/'> 
         <div className='container'>
-          <div className={isModalOpen ? 'row header' : 'row header zIndex'}>
+          <div className={isModalOpen ? 'row header' : 'row header z-Index'}>
             <Header
               toggleSidebar={toggleSidebar}
             />
