@@ -74,9 +74,9 @@ export function Project(props: ProjectProps){
                     isOpen={isOpen}
                     setShowProjects={props.setShowProjects}
                     selectedProject={props.selectedProject}
-                    setSelectedProject={props.setSelectedProject || null}
+                    setSelectedProject={props.setSelectedProject}
                     selectedClient={props.selectedClient}
-                    setSelectedClient={props?.setSelectedClient || null}
+                    setSelectedClient={props.setSelectedClient}
                     setIsOpen={setIsOpen}
                     projects={projects}
                     clients={clients}
