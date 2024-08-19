@@ -1,4 +1,4 @@
-import { ProjectData, ClientsAndProjects, Data, EntriesByWeek, Constants } from "../types/types"
+import { ProjectData, ClientsAndProjects, Data, EntriesByWeek, TimeConstants } from "../types/types"
 import { getFormattedDate, splitToDateComponents } from "./dateFunctions"
 
 export function groupProjectsAndClients(projects: ProjectData[]) {
@@ -28,14 +28,14 @@ export function groupEntriesByWeek(timeEntries:Data[]){
         const { date: currentEntryDate, year: currentEntryYear, month: currentEntryMonth} = splitToDateComponents(timeEntryDate)
 
         let firstDayOfWeek = timeEntryDate.getDate() - timeEntryDate.getDay()
-        let lastDayOfWeek = firstDayOfWeek + Constants.DAYS_TO_END_OF_WEEK
+        let lastDayOfWeek = firstDayOfWeek + TimeConstants.DAYS_REMAINING_IN_WEEK_FROM_DAY_2
 
         const { date: weekStartDate, year: weekStartYear, month: weekStartMonth} = splitToDateComponents(new Date(timeEntryDate.setDate(firstDayOfWeek)))
 
         let { date: weekEndDate, year: weekEndYear, month: weekEndMonth} = splitToDateComponents(new Date(timeEntryDate.setDate(lastDayOfWeek)))
 
 
-        if((weekEndMonth === Constants.LAST_MONTH_OF_YEAR && currentEntryMonth < weekEndMonth) ||  // Eg: Dec(week end month) === Dec && Jan(currentMonth) < Dec(week end month)
+        if((weekEndMonth === TimeConstants.DECEMBER_MONTH && currentEntryMonth < weekEndMonth) ||  // Eg: Dec(week end month) === Dec && Jan(currentMonth) < Dec(week end month)
             (currentEntryDate < weekStartDate && currentEntryMonth > weekEndMonth))           // Eg: 3(current date) < 31(week start date) && Aug(current month) > July(week end month)
         {
             if(currentEntryYear > weekEndYear){      // Eg: 2025(current year) > 2024 (week end year)

@@ -1,4 +1,4 @@
-import { Constants } from "../types/types"
+import { TimeConstants } from "../types/types"
 
 export function getFormattedDate(date: Date): string {
     return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2,'0')}-${date.getDate().toString().padStart(2,'0')}`
@@ -28,7 +28,7 @@ export function splitToDateComponents(taskDate: Date) {
 }
  
 export function calculateDays(startDate: Date, endDate: Date): number{ 
-    const ONE_DAY = Constants.HRS_PER_DAY * Constants.MS_PER_HR
+    const ONE_DAY = TimeConstants.HOURS_PER_DAY * TimeConstants.MILLISECONDS_PER_HOUR
     const startDateStartOfDay = new Date(startDate.toDateString()).getTime()
     const endDateStartOfDay = new Date(endDate.toDateString()).getTime()
     return Math.floor(Math.abs((startDateStartOfDay - endDateStartOfDay) / ONE_DAY))

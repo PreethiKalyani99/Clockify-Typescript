@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "../redux/store"
 import { getFormattedTime, calculateDays, calculateEndDate } from "../utils/dateFunctions"
-import { SingleTimeEntryProp, FocusEvent, Constants, SelectedOption } from "../types/types"
+import { SingleTimeEntryProp, FocusEvent, TimeConstants, SelectedOption } from "../types/types"
 import { onStartTimeBlur, onEndTimeBlur, onDurationBlur } from "../utils/onBlurFunctions"
 import { updateTimeEntry, duplicateTimeEntry, deleteTimeEntry } from "../redux/clockifyThunk"
 import DatePicker from "react-datepicker";
@@ -95,7 +95,7 @@ export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntr
     }
 
     const handleDurationBlur = (e: FocusEvent): void => {
-        const { isValid, end: newEndTime, duration: newDuration } = onDurationBlur(e.target.value, timeStart, Constants.NO_OF_COLON_DURATION)
+        const { isValid, end: newEndTime, duration: newDuration } = onDurationBlur(e.target.value, timeStart, TimeConstants.COLON_COUNT_IN_DURATION)
 
         if(!isValid){
             setDuration(entry.timeInterval.duration)

@@ -16,7 +16,7 @@ import {
 } from "../utils/dateFunctions";
 import { groupEntriesByWeek } from "../utils/groupValues";
 import { RootState, AppDispatch } from "../redux/store";
-import { FocusEvent, KeyboardEvent, Constants, SelectedOption } from "../types/types";
+import { FocusEvent, KeyboardEvent, TimeConstants, SelectedOption } from "../types/types";
 import { createTimeEntry, getUserTimeEntries, getProjects, getClients } from "../redux/clockifyThunk";
 import { TimeEntries } from "./TimeEntries";
 import { onStartTimeBlur, onEndTimeBlur, onDurationBlur } from "../utils/onBlurFunctions";
@@ -99,7 +99,7 @@ export function TimeTracker(){
     }
 
     const handleTotalDurationBlur = (e: FocusEvent): void => {
-        const { isValid, end: newEndTime, duration: newDuration } = onDurationBlur(e.target.value, timeStart, Constants.NO_OF_COLON_DURATION)
+        const { isValid, end: newEndTime, duration: newDuration } = onDurationBlur(e.target.value, timeStart, TimeConstants.COLON_COUNT_IN_DURATION)
 
         if(!isValid){
             setDuration(duration)

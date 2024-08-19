@@ -1,7 +1,7 @@
 import { convertToHoursAndMinutes, calculateTimeDifference, convertDurationToHrsMinsSecs, calculateEndTime, isDurationLimitExceeded } from "./hoursAndMinutes"
 import { formatTime } from "./dateFunctions"
 import { checkString } from "./checkString"
-import { Constants } from "../types/types"
+import { TimeConstants } from "../types/types"
 
 export function onStartTimeBlur(timeStart: string, timeEnd: Date){
     const { isValid, hours, minutes } = convertToHoursAndMinutes(timeStart)
@@ -19,7 +19,7 @@ export function onStartTimeBlur(timeStart: string, timeEnd: Date){
 
     const { hrs, mins } = calculateTimeDifference(new Date(newStart), timeEnd)
 
-    if(hrs > Constants.MAX_TIME_LIMIT){
+    if(hrs > TimeConstants.MAX_HOURS_LIMIT){
         return { isValid: false, start: new Date(), end: timeEnd, duration: '' }
     }
     return { isValid: true, start: newStart, end: timeEnd, duration: formatTime(hrs, mins, 0)}
@@ -41,7 +41,7 @@ export function onEndTimeBlur(timeStart: Date, timeEnd: string){
     }
     const { hrs, mins } = calculateTimeDifference(timeStart, newEnd)
 
-    if(hrs > Constants.MAX_TIME_LIMIT){
+    if(hrs > TimeConstants.MAX_HOURS_LIMIT){
         return { isValid: false, end: new Date(), duration: '' }
     }
     return { isValid: true, end: newEnd, duration: formatTime(hrs, mins, 0) }
