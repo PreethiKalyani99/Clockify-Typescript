@@ -52,7 +52,6 @@ export const createTimeEntry = createAsyncThunk("createTimeEntry", async (timeEn
     }
     catch(error){
         console.log(error)
-        throw error
     }
 })
 
@@ -74,7 +73,6 @@ export const updateTimeEntry = createAsyncThunk("updateTimeEntry", async ({id, .
     }
     catch(error){
         console.log(error)
-        throw error
     }
 })
 
