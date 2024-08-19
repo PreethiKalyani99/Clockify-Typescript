@@ -361,3 +361,14 @@
   padding-left: 10px;
   outline: none;
 }
+
+.create-new-project-btn{
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  cursor: pointer;
+  position: sticky;
+  bottom: 0;
+  background: white;
+}

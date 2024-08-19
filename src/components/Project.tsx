@@ -34,16 +34,7 @@ export function Project(props: ProjectProps){
             <components.MenuList {...prop}>
             {prop.children}
             <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    padding: '10px',
-                    borderTop: '1px solid #ccc',
-                    cursor: 'pointer',
-                    position: 'sticky',
-                    bottom: 0,
-                    background: 'white'
-                }}
+                className="create-new-project-btn"
                 onClick={() => {
                     setIsOpen(!isOpen)
                     dispatch(setIsModalOpen(!isOpen))
