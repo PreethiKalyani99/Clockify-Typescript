@@ -11,7 +11,7 @@ export function convertToHoursAndMinutes(time: string): HoursAndMinutesProp {
 
     const { isValid, numberOfColons } = checkString(time)
 
-    if(!isValid || (numberOfColons > TimeConstants.COLON_COUNT_IN_HOURS_AND_MINUTES)){
+    if(!isValid || (numberOfColons > TimeConstants.COLON_COUNT_IN_HOURS_AND_MINUTES_STRING)){
         return {hours: 0, minutes: 0, isValid: false}
     }
 

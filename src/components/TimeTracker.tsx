@@ -99,7 +99,7 @@ export function TimeTracker(){
     }
 
     const handleTotalDurationBlur = (e: FocusEvent): void => {
-        const { isValid, end: newEndTime, duration: newDuration } = onDurationBlur(e.target.value, timeStart, TimeConstants.COLON_COUNT_IN_DURATION)
+        const { isValid, end: newEndTime, duration: newDuration } = onDurationBlur(e.target.value, timeStart, TimeConstants.COLON_COUNT_IN_DURATION_STRING)
 
         if(!isValid){
             setDuration(duration)
