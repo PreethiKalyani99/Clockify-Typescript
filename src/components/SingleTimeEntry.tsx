@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "../redux/store"
-import { getFormattedTime, calculateDays, calculateEndDate } from "../utils/dateFunctions"
-import { SingleTimeEntryProp, FocusEvent, TimeConstants, SelectedOption } from "../types/types"
-import { onStartTimeBlur, onEndTimeBlur, onDurationBlur } from "../utils/onBlurFunctions"
-import { updateTimeEntry, duplicateTimeEntry, deleteTimeEntry } from "../redux/clockifyThunk"
+import { getFormattedTime, calculateDays } from "../utils/dateFunctions"
+import { SingleTimeEntryProp, SelectedOption } from "../types/types"
+import { updateTimeEntry } from "../redux/clockifyThunk"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import threeDotsIcon from '../assets/icons/menu.png'
@@ -14,25 +13,36 @@ import { getSelectedProjectAndClient } from "../utils/getSelectedProjectAndClien
 import { Project } from "./Project"
 import { updateTimer } from "../redux/clockifySlice"
 
-export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntryProp){
+export function SingleTimeEntry({ entry, projects, toggleTimer, onTaskBlur, onStartBlur, onEndBlur, onDurationBlur, onDateChange, onDuplicateTimeEntry, onDeleteTimeEntry }: SingleTimeEntryProp){
     const dispatch = useDispatch<AppDispatch>()
 
     const timeStart = new Date(entry.timeInterval.start)
     const timeEnd = new Date(entry.timeInterval.end)
     
-    const [showActionItems, setShowActionItems] = useState(false)
     const [showProjects, setShowProjects] = useState(false) 
+    const [showActionItems, setShowActionItems] = useState(false)
 
     const [taskDescription, setTaskDescription] = useState(entry.description)
     const [startDateTime, setStartDateTime] = useState(getFormattedTime(timeStart))
     const [endDateTime, setEndDateTime] = useState(getFormattedTime(timeEnd))
     const [duration, setDuration] = useState(parseISODuration(entry.timeInterval.duration || '00:00:00'))
-    const [days, setDays] = useState(calculateDays(timeStart, timeEnd))
 
     const [selectedProject, setSelectedProject] = useState({value: entry?.projectId || '', label: entry?.project?.name  || 'Project'})
     const [selectedClient, setSelectedClient] = useState({value: entry?.project?.clientId  || '', label: entry?.project?.clientName  || ''})
  
-
+    useEffect(() => {
+        if(getFormattedTime(timeStart) !== startDateTime || getFormattedTime(timeEnd) !== endDateTime || parseISODuration(entry.timeInterval.duration) !== duration || taskDescription !== entry.description){
+            setStartDateTime(getFormattedTime(timeStart))
+            setEndDateTime(getFormattedTime(timeEnd))
+            setDuration(parseISODuration(entry.timeInterval.duration))
+            setTaskDescription(entry.description)
+            if(selectedProject.value !== entry.projectId){
+                setSelectedProject({value: entry.projectId || '', label: entry?.project?.name || selectedProject.label})
+                setSelectedClient({value: entry?.project?.clientId || '', label: entry?.project?.clientName || selectedClient.label})
+            }
+        }
+    }, [entry.timeInterval.start, entry.timeInterval.end, entry.timeInterval.duration, entry.description])
+    
     useEffect(() => {
         const projectValue = projects?.find(project => project.id === selectedProject.value)
         if(projectValue){
@@ -40,91 +50,7 @@ export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntr
             setSelectedClient({value: projectValue.clientId ?? '', label: projectValue.clientName})
         }
     }, [projects, selectedProject.value])
-
-    const handleTaskBlur = (): void => {
-        dispatch(updateTimeEntry({
-            description: taskDescription, 
-            start: timeStart.toISOString().split('.')[0] + 'Z', 
-            end: timeEnd.toISOString().split('.')[0] + 'Z', 
-            id: entry.id, 
-            projectId: entry.projectId
-        }))
-    }
-
-    const handleStartTimeBlur = (e: FocusEvent): void => {
-        const { isValid, start: newStart, end: newEnd, duration: newDuration } = onStartTimeBlur(e.target.value, timeEnd)
-        if(!isValid){
-            setStartDateTime(getFormattedTime(timeStart))
-            return
-        }
-        setStartDateTime(getFormattedTime(newStart))
-        setDuration(newDuration)
-        setDays(calculateDays(newStart, newEnd))
-
-        dispatch(updateTimeEntry({
-            description: entry.description, 
-            start: newStart.toISOString().split('.')[0] + 'Z', 
-            end: newEnd.toISOString().split('.')[0] + 'Z', 
-            id: entry.id,  
-            projectId: entry.projectId
-        }))
-    }
     
-    const handleEndTimeBlur = (e: FocusEvent): void => {
-        const { isValid, end: newEnd, duration: newDuration } = onEndTimeBlur(timeStart, e.target.value)
-        if(!isValid){
-            setEndDateTime(getFormattedTime(timeEnd))
-            return
-        }
-        setEndDateTime(getFormattedTime(newEnd))
-        setDuration(newDuration)
-        setDays(calculateDays(timeStart, newEnd))
-
-        dispatch(updateTimeEntry({
-            description: entry.description, 
-            start: timeStart.toISOString().split('.')[0] + 'Z', 
-            end: newEnd.toISOString().split('.')[0] + 'Z', 
-            id: entry.id, 
-            projectId: entry.projectId
-        })) 
-    }
-
-    const handleDateChange = (dateTime: Date | null): void => {
-        if(dateTime){
-            const newEndTime = calculateEndDate(dateTime, timeEnd, timeStart)
-
-            setDays(calculateDays(dateTime, newEndTime))
-            dispatch(updateTimeEntry({
-                description: entry.description, 
-                start: dateTime.toISOString().split('.')[0] + 'Z', 
-                end: newEndTime.toISOString().split('.')[0] + 'Z', 
-                id: entry.id, 
-                projectId: entry.projectId
-            }))
-        }
-    }
-
-    const handleDurationBlur = (e: FocusEvent): void => {
-        const { isValid, end: newEndTime, duration: newDuration } = onDurationBlur(e.target.value, timeStart, TimeConstants.COLON_COUNT_IN_DURATION_STRING)
-
-        if(!isValid){
-            setDuration(entry.timeInterval.duration)
-            return
-        }
-        setDuration(newDuration)
-        setEndDateTime(getFormattedTime(newEndTime))
-        setDays(calculateDays(timeStart, newEndTime))
-
-        dispatch(updateTimeEntry({
-            description: entry.description, 
-            start: timeStart.toISOString().split('.')[0] + 'Z', 
-            end: newEndTime.toISOString().split('.')[0] + 'Z', 
-            id: entry.id, 
-            projectId: entry.projectId
-        }))
-
-    }
-
     const handleSelect = (value: SelectedOption) => {
         setSelectedProject(value)
         setShowProjects(false)
@@ -137,15 +63,7 @@ export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntr
         }))
     }
 
-    function handleDuplicateTimeEntry(id: string){
-        dispatch(duplicateTimeEntry({id}))
-        setShowActionItems(false)
-    }
-
-    function handleDeleteTimeEntry(id: string){
-        dispatch(deleteTimeEntry({id}))
-        setShowActionItems(false)
-    }
+    const days = calculateDays(timeStart, timeEnd)
 
     return(
         <>
@@ -156,7 +74,7 @@ export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntr
                     name="task-name"
                     value={taskDescription || ''}
                     onChange={(e) => setTaskDescription(e.target.value)}
-                    onBlur={handleTaskBlur}
+                    onBlur={() => onTaskBlur(taskDescription, timeStart, timeEnd, entry.id, entry.projectId)}
                 ></input>
                 <button 
                     onClick={() => setShowProjects(!showProjects)}
@@ -178,7 +96,7 @@ export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntr
                         name="startTime"
                         value={startDateTime || '00:00'}
                         onChange={(e) => setStartDateTime(e.target.value)}
-                        onBlur={handleStartTimeBlur}
+                        onBlur={(e) => onStartBlur(e, entry.description, timeEnd, entry.id, entry.projectId)}
                     ></input>
                     <span className="ms-2 me-2">-</span>
                     <input
@@ -187,7 +105,7 @@ export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntr
                         name="endTime"
                         value={endDateTime || '00:00'}
                         onChange={(e) => setEndDateTime(e.target.value)}
-                        onBlur={handleEndTimeBlur}
+                        onBlur={(e) => onEndBlur(e, entry.description, timeStart, entry.id, entry.projectId)}
                     ></input>
 
                     {days > 0 && <sup className="task-days"><b>{'+' + days}</b></sup>}
@@ -195,7 +113,7 @@ export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntr
                     <DatePicker
                         className="dateIcon"                    
                         selected={timeStart}
-                        onChange={handleDateChange}
+                        onChange={(e) => onDateChange(e, entry.description, timeStart, timeEnd, entry.id, entry.projectId)}
                         showTimeSelect={false}
                         dateFormat="yyyy-MM-dd"
                         customInput={
@@ -209,7 +127,7 @@ export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntr
                         className='duration-box'
                         value={duration || '00:00:00'}
                         onChange={(e) => setDuration(e.target.value)}
-                        onBlur={handleDurationBlur}
+                        onBlur={(e) => onDurationBlur(e, entry.description, timeStart, entry.id, entry.projectId)}
                     />
                     <button 
                         onClick={() => {
@@ -234,7 +152,10 @@ export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntr
                     <ul className="action-items">
                         <li>
                         <button 
-                            onClick={() => handleDuplicateTimeEntry(entry.id)}
+                            onClick={() => {
+                                onDuplicateTimeEntry(entry.id)
+                                setShowActionItems(false)
+                            }}
                             className="duplicate-btn"
                         >
                             Duplicate
@@ -242,7 +163,10 @@ export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntr
                         </li>
                         <li>
                         <button 
-                            onClick={() => handleDeleteTimeEntry(entry.id)}
+                            onClick={() => {
+                                onDeleteTimeEntry(entry.id)
+                                setShowActionItems(false)
+                            }}
                             className="delete-btn"
                         >
                             Delete

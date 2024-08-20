@@ -206,7 +206,13 @@ export type TimeEntryListProp = TimeEntryCommonProp & {
 
 export type SingleTimeEntryProp = TimeEntryCommonProp & {
     entry: TimeEntriesValues
-    
+    onTaskBlur: (description: string, timeStart: Date, timeEnd: Date, id: string, projectId: string | null) => void
+    onStartBlur: (e: FocusEvent, description: string, timeEnd: Date, id: string, projectId: string | null) => void
+    onEndBlur: (e: FocusEvent, description: string, timeStart: Date, id: string, projectId: string | null) => void
+    onDurationBlur: (e: FocusEvent, description: string, timeStart: Date, id: string, projectId: string | null) => void
+    onDateChange: (dateTime: Date | null, description: string, timeStart: Date, timeEnd: Date, id: string, projectId: string | null) => void
+    onDuplicateTimeEntry: (id: string) => void
+    onDeleteTimeEntry: (id: string) => void
 }
 
 export type projects = {
