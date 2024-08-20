@@ -41,6 +41,16 @@ export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntr
         }
     }, [projects, selectedProject.value])
 
+    const handleTaskBlur = (): void => {
+        dispatch(updateTimeEntry({
+            description: taskDescription, 
+            start: timeStart.toISOString().split('.')[0] + 'Z', 
+            end: timeEnd.toISOString().split('.')[0] + 'Z', 
+            id: entry.id, 
+            projectId: entry.projectId
+        }))
+    }
+
     const handleStartTimeBlur = (e: FocusEvent): void => {
         const { isValid, start: newStart, end: newEnd, duration: newDuration } = onStartTimeBlur(e.target.value, timeEnd)
         if(!isValid){
@@ -146,6 +156,7 @@ export function SingleTimeEntry({ entry, projects, toggleTimer }: SingleTimeEntr
                     name="task-name"
                     value={taskDescription || ''}
                     onChange={(e) => setTaskDescription(e.target.value)}
+                    onBlur={handleTaskBlur}
                 ></input>
                 <button 
                     onClick={() => setShowProjects(!showProjects)}
