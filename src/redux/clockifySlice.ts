@@ -74,9 +74,10 @@ export const ClockifySlice = createSlice({
         builder.addCase(createTimeEntry.pending, (state) => {
             state.isLoading = true
         })
-        .addCase(createTimeEntry.fulfilled, (state, action: PayloadAction<Data>) => {
+        .addCase(createTimeEntry.fulfilled, (state, action: PayloadAction<Data | undefined>) => {
             state.isLoading = false
-            state.data = [...state.data, action.payload] 
+            if(action.payload)
+                state.data = [...state.data, action.payload] 
         })
         .addCase(getUserTimeEntries.pending, (state) => {
             state.isLoading = true
@@ -88,7 +89,7 @@ export const ClockifySlice = createSlice({
         .addCase(updateTimeEntry.pending, (state) => {
             state.isLoading = true
         })
-        .addCase(updateTimeEntry.fulfilled, (state, action: PayloadAction<Data>) => {
+        .addCase(updateTimeEntry.fulfilled, (state, action: PayloadAction<Data | undefined>) => {
             state.isLoading = false
             const id = action.payload?.id
             const timeEntry = state.data.find(entry => entry.id === id)
