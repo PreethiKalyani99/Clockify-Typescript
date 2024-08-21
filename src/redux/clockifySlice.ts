@@ -79,12 +79,18 @@ export const ClockifySlice = createSlice({
             if(action.payload)
                 state.data = [...state.data, action.payload] 
         })
+        .addCase(createTimeEntry.rejected, (state) => {
+            state.isLoading = false
+        })
         .addCase(getUserTimeEntries.pending, (state) => {
             state.isLoading = true
         })
         .addCase(getUserTimeEntries.fulfilled, (state, action: PayloadAction<Data[] | undefined>) => {
             state.isLoading = false
             state.data = action.payload ?? []
+        })
+        .addCase(getUserTimeEntries.rejected, (state) => {
+            state.isLoading = false
         })
         .addCase(updateTimeEntry.pending, (state) => {
             state.isLoading = true
@@ -96,6 +102,9 @@ export const ClockifySlice = createSlice({
             if (timeEntry) 
                 Object.assign(timeEntry, action.payload)
         })
+        .addCase(updateTimeEntry.rejected, (state) => {
+            state.isLoading = false
+        })
         .addCase(duplicateTimeEntry.pending, (state) => {
             state.isLoading = true
         })
@@ -103,6 +112,9 @@ export const ClockifySlice = createSlice({
             state.isLoading = false
             if(action.payload)
                 state.data = [action.payload, ...state.data]
+        })
+        .addCase(duplicateTimeEntry.rejected, (state) => {
+            state.isLoading = false
         })
         .addCase(deleteTimeEntry.pending, (state) => {
             state.isLoading = true
@@ -114,22 +126,49 @@ export const ClockifySlice = createSlice({
                 state.data = [...newData]
             }
         })
+        .addCase(deleteTimeEntry.rejected, (state) => {
+            state.isLoading = false
+        })
+        .addCase(getProjects.pending, (state) => {
+            state.isLoading = true
+        })
         .addCase(getProjects.fulfilled, (state, action: PayloadAction<Project[] | undefined>) => {
             if(action.payload)
                 state.projects = action.payload
             
         })
+        .addCase(getProjects.rejected, (state) => {
+            state.isLoading = false
+        })
+        .addCase(getClients.pending, (state) => {
+            state.isLoading = true
+        })
         .addCase(getClients.fulfilled, (state, action: PayloadAction<ClientData[] | undefined>) => {
             if(action.payload)
                 state.clients = action.payload
+        })
+        .addCase(getClients.rejected, (state) => {
+            state.isLoading = false
+        })
+        .addCase(createProject.pending, (state) => {
+            state.isLoading = true
         })
         .addCase(createProject.fulfilled, (state, action: PayloadAction<Project | undefined>) => {
             if(action.payload)
                 state.projects = [...state.projects, action.payload]
         })
+        .addCase(createProject.rejected, (state) => {
+            state.isLoading = false
+        })
+        .addCase(createClient.pending, (state) => {
+            state.isLoading = true
+        })
         .addCase(createClient.fulfilled, (state, action: PayloadAction<ClientData | undefined>) => {
             if(action.payload)
                 state.clients = [action.payload, ...state.clients]
+        })
+        .addCase(createClient.rejected, (state) => {
+            state.isLoading = false
         })
     }
 })
