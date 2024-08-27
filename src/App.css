@@ -1,7 +1,6 @@
 .container{
   max-width: 2000px !important;
   padding-left: 10px !important;
-  /* padding-right: 0 !important; */
 }
 
 .row>*, .nav-link{
@@ -83,7 +82,7 @@
   height: 70px;
 }
 
-.zIndex{
+.z-Index{
   z-index: 99999 !important;
 }
 
@@ -220,32 +219,32 @@
   width: 100%;
 }
 
-.startTimeBox{
+.start-time-box{
   margin-left: 3rem;
 }
-.startTimeBox, .endTimeBox{
+.start-time-box, .end-time-box{
   width: 55px;
   padding: 7px;
 }
 
-.startTimeBox:hover, .endTimeBox:hover, .durationBox:hover, .description-display:hover{
+.start-time-box:hover, .end-time-box:hover, .duration-box:hover, .description-display:hover{
   border: 1px solid #C6D2D9;
 }
 
-.startTimeBox, .endTimeBox, .durationBox, .dateIcon{
+.start-time-box, .end-time-box, .duration-box, .dateIcon{
   height: 45px;
   border: none;
   outline: none;
 }
 
-.durationBox, .timer-duration{
+.duration-box, .timer-duration{
   width: 90px;
   height: 45px;
   text-align: center;
   color: #333;
 }
 
-.durationBox{
+.duration-box{
   margin-left: 2rem;
 }
 
@@ -301,7 +300,7 @@
   justify-content: space-between;
 }
 
-.week-total, .durationBox, .total-time, .timer-duration{
+.week-total, .duration-box, .total-time, .timer-duration{
   font-size: 18px;
   font-weight: 500;
 }
@@ -361,4 +360,15 @@
 .create-project{
   padding-left: 10px;
   outline: none;
+}
+
+.create-new-project-btn{
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  cursor: pointer;
+  position: sticky;
+  bottom: 0;
+  background: white;
 }
