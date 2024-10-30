@@ -8,6 +8,7 @@ import {
     updateDuration,
     resetState,
     updateProjectValue,
+    updateClientValue
 } from "../redux/clockifySlice";
 import { 
     calculateEndDate, 
@@ -64,6 +65,14 @@ export function TimeTracker(){
         return () => clearInterval(intervalIdRef.current as NodeJS.Timeout)
 
     }, [isTimerOn])
+
+    useEffect(() => {
+        const projectValue = projects?.find(project => project.id === selectedProject.value)
+        if(projectValue){
+            dispatch(updateProjectValue({value: projectValue?.id, label: projectValue?.name})) 
+            dispatch(updateClientValue({value: projectValue.clientId ?? '', label: projectValue.clientName}))
+        }
+    }, [projects, dispatch, selectedProject.value])
     
     const handleStartTimeBlur = (e: FocusEvent): void => {
         const { isValid, start: newStart, end, duration: newDuration } = onStartTimeBlur(e.target.value, timeEnd)

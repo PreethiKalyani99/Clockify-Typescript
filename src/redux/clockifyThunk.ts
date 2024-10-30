@@ -30,6 +30,7 @@ export const getUserTimeEntries = createAsyncThunk("getUserTimeEntries", async (
     }
     catch(error){
         console.log(error)
+        throw error
     }
 })
 
@@ -52,6 +53,7 @@ export const createTimeEntry = createAsyncThunk("createTimeEntry", async (timeEn
     }
     catch(error){
         console.log(error)
+        throw error
     }
 })
 
@@ -73,6 +75,7 @@ export const updateTimeEntry = createAsyncThunk("updateTimeEntry", async ({id, .
     }
     catch(error){
         console.log(error)
+        throw error
     }
 })
 
@@ -89,6 +92,7 @@ export const deleteTimeEntry = createAsyncThunk("deleteTimeEntry", async ({id}: 
     }
     catch(error){
         console.log(error)
+        throw error
     }
 })
 
@@ -109,6 +113,7 @@ export const duplicateTimeEntry = createAsyncThunk("duplicateTimeEntry", async (
     }
     catch(error){
         console.log(error)
+        throw error
     }
 })
 
@@ -129,6 +134,7 @@ export const getProjects = createAsyncThunk("getProjects", async() => {
     }
     catch(error){
         console.log(error)
+        throw error
     }
 })
 
@@ -149,6 +155,7 @@ export const getClients = createAsyncThunk("getClients", async() => {
     }
     catch(error){
         console.log(error)
+        throw error
     }
 })
 
@@ -170,6 +177,7 @@ export const createProject = createAsyncThunk("createProject", async(data: Creat
     }
     catch(error){
         console.log(error)
+        throw error
     }
 })
 
@@ -192,5 +200,6 @@ export const createClient = createAsyncThunk("createClient", async(data: CreateC
     }
     catch(error){
         console.log(error)
+        throw error
     }
 })
