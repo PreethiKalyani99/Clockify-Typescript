@@ -72,6 +72,7 @@ export function SingleTimeEntry({ entry, projects, toggleTimer, onTaskBlur, onSt
                     className="description-display"
                     type="text"
                     name="task-name"
+                    placeholder="Add Description"
                     value={taskDescription || ''}
                     onChange={(e) => setTaskDescription(e.target.value)}
                     onBlur={() => onTaskBlur(taskDescription, timeStart, timeEnd, entry.id, entry.projectId)}
