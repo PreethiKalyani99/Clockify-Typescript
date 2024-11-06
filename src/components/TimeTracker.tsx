@@ -12,7 +12,7 @@ import {
 } from "../redux/clockifySlice";
 import { 
     calculateEndDate, 
-    getFormattedTime, 
+    getFormattedTime,
     calculateDays, 
 } from "../utils/dateFunctions";
 import { groupEntriesByWeek } from "../utils/groupValues";
@@ -23,6 +23,7 @@ import { TimeEntries } from "./TimeEntries";
 import { onStartTimeBlur, onEndTimeBlur, onDurationBlur } from "../utils/onBlurFunctions";
 import { calculateEndTime, convertMilliSecsToHrsMinsSec } from "../utils/hoursAndMinutes";
 import { Timer } from "./Timer";
+import { TablePagination  as Pagination} from "@mui/material";
 
 export function TimeTracker(){
     const { isModalOpen, currentTask, selectedProject, selectedClient, data, projects, clients} = useSelector((state: RootState) => state.clockify)
@@ -42,14 +43,27 @@ export function TimeTracker(){
     const [totalDuration, setDuration] = useState(duration)
     const [isTimerOn, setIsTimerOn] = useState(false)
     const [elapsedTime, setElapsedTime] = useState(0)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [rowsPerPage, setRowsPerPage] = useState(50)
 
     const dispatch = useDispatch<AppDispatch>()
+    
+    useEffect(() => {
+        dispatch(getUserTimeEntries({pageSize: rowsPerPage, page: currentPage}))
+    }, [dispatch, rowsPerPage, currentPage])
 
     useEffect(() => {
-        dispatch(getUserTimeEntries())
         dispatch(getProjects())
         dispatch(getClients())
     }, [dispatch])
+
+    useEffect(() => {
+        if(getFormattedTime(timeStart) !== startDateTime && getFormattedTime(timeEnd) !== endDateTime && duration !== totalDuration){
+            setStartDateTime(getFormattedTime(timeStart))
+            setEndDateTime(getFormattedTime(timeEnd))
+            setDuration(duration)
+        }
+    }, [timeStart, timeEnd, duration, startDateTime, endDateTime, totalDuration])
 
     useEffect(() => {
         if(isTimerOn){
@@ -180,7 +194,18 @@ export function TimeTracker(){
         dispatch(resetState())
     }
 
+    const handlePageChange = (_:any, nextpage: number) => {
+        setCurrentPage(nextpage)
+    }
+
+    const handleChangeRowsPerPage = (event: FocusEvent) => {
+        setRowsPerPage(parseInt(event.target.value, 10))
+        setCurrentPage(1)
+    }
+
     const totalTime = convertMilliSecsToHrsMinsSec(elapsedTime)
+    const isNextDisabled = data.length < rowsPerPage
+
     return (
         <>
             {isTimerOn ? 
@@ -235,6 +260,29 @@ export function TimeTracker(){
                 projects={projects}
                 toggleTimer={toggleTimer}
             />
+            {data.length > 0 && <Pagination
+                className="pagination"
+                component="div"
+                count={300}
+                page={currentPage}
+                onPageChange={handlePageChange}
+                rowsPerPage={rowsPerPage}
+                rowsPerPageOptions={[
+                    {value: 50, label: '50'},
+                    {value: 100, label: '100'},
+                    {value: 200, label: '200'}
+                ]}
+                labelRowsPerPage={'Items per page'}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                labelDisplayedRows={() => `Page: ${currentPage} - entries: ${data.length}`}
+                slotProps={{
+                    actions: {
+                        nextButton: {
+                            disabled: isNextDisabled,
+                        },
+                    },
+                }}
+            />}
         </>
     )
 }

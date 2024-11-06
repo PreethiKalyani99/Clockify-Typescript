@@ -9,11 +9,12 @@ import {
     ClientData,
     CreateClientProp,
     CreateProjectProp,
+    TimeEntryParams
 } from "../types/types";
 
-export const getUserTimeEntries = createAsyncThunk("getUserTimeEntries", async () => {
+export const getUserTimeEntries = createAsyncThunk("getUserTimeEntries", async ({pageSize, page}: TimeEntryParams) => {
     try{
-        const response = await fetch(`https://api.clockify.me/api/v1/workspaces/${WORKSPACE_ID}/user/${USER_ID}/time-entries?hydrated=true`, {
+        const response = await fetch(`https://api.clockify.me/api/v1/workspaces/${WORKSPACE_ID}/user/${USER_ID}/time-entries?page-size=${pageSize}&page=${page}&hydrated=true`, {
                 method: "GET",
                 headers: {
                     'X-Api-Key':AUTH_TOKEN ?? '',

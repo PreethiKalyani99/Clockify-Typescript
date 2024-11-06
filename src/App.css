@@ -98,7 +98,7 @@
 }
 
 .timer-input-box{
-  width: 70%;
+  width: 65%;
 }
 
 .input-box:hover, .timer-input-box:hover{
@@ -188,21 +188,34 @@
   width: 300px;
 }
 
-.project-dropdown{
+.project-dropdown, .project-dropdown-timer{
   position: fixed;
   z-index: 999 !important;
-  margin-left: 40%;
+}
+
+.project-dropdown{
+  right: 35%
+}
+
+.project-dropdown-timer{
+  right: 20%;
 }
 
 .project-text-color{
   color: #03a9f4;
 }
 
-.project-text, .task-project-text{
+.project-text, .task-project-text, .project-text-timer{
   border: none;
   outline: none;
   background-color: white;
   margin-left: 1rem;
+}
+
+.project-text-timer{
+  max-width: 250px;
+  overflow-wrap: break-word;
+  word-wrap: break-word; 
 }
 
 .description-project-container{
@@ -211,7 +224,7 @@
   align-items: center;
 }
 
-.project-text{
+.project-text, .project-text-timer{
   flex-grow: 1;
 }
 

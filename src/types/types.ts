@@ -59,6 +59,11 @@ export type IdProp = {
     id: string
 }
 
+export type TimeEntryParams = {
+    pageSize: number
+    page: number
+}
+
 export type UpdateTimeEntryProp = TimeEntryDataProp & IdProp
 
 export type SelectedOption = {

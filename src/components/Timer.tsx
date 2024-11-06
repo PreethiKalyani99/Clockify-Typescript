@@ -18,7 +18,7 @@ export function Timer(props: TimerProps){
                     value={props.taskName}
                 ></input>
                 <div className="timer-sub-container">
-                    <button onClick={props.onToggleProject} className={props?.selectedProject?.label === 'Project' ? "project-text-color project-text" : 'project-text'}> 
+                    <button onClick={props.onToggleProject} className={props?.selectedProject?.label === 'Project' ? "project-text-color project-text-timer" : 'project-text-timer'}> 
                         {props?.selectedProject?.label === 'Project'  && 
                             <img 
                                 src={circledPlusIcon} 
@@ -42,7 +42,7 @@ export function Timer(props: TimerProps){
                 </ul>
             </div>
             </div>
-            <div className= {props.showProjects ? "project-dropdown" : ''}>
+            <div className= {props.showProjects ? "project-dropdown-timer" : ''}>
                 {props.showProjects && 
                     <Project 
                         onSelect={props.onProjectSelect}

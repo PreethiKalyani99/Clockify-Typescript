@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://PreethiKalyani99.github.io/Clockify-Typescript",
   "dependencies": {
+    "@mui/material": "^6.1.6",
     "@reduxjs/toolkit": "^2.2.7",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.104",
