@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/Clockify-Typescript/static/css/main.fba93c19.css",
-    "main.js": "/Clockify-Typescript/static/js/main.c20f23b0.js",
+    "main.js": "/Clockify-Typescript/static/js/main.df00ab30.js",
     "static/js/453.398d3e6b.chunk.js": "/Clockify-Typescript/static/js/453.398d3e6b.chunk.js",
     "static/media/bootstrap-icons.woff?": "/Clockify-Typescript/static/media/bootstrap-icons.39795c0b4513de014cf8.woff",
     "static/media/bootstrap-icons.woff2?": "/Clockify-Typescript/static/media/bootstrap-icons.b7bcc075b395c14ce8c2.woff2",
@@ -9,11 +9,11 @@
     "static/media/menu.png": "/Clockify-Typescript/static/media/menu.4cec5c7e9bcfdebbe3bd.png",
     "index.html": "/Clockify-Typescript/index.html",
     "main.fba93c19.css.map": "/Clockify-Typescript/static/css/main.fba93c19.css.map",
-    "main.c20f23b0.js.map": "/Clockify-Typescript/static/js/main.c20f23b0.js.map",
+    "main.df00ab30.js.map": "/Clockify-Typescript/static/js/main.df00ab30.js.map",
     "453.398d3e6b.chunk.js.map": "/Clockify-Typescript/static/js/453.398d3e6b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.fba93c19.css",
-    "static/js/main.c20f23b0.js"
+    "static/js/main.df00ab30.js"
   ]
 }
